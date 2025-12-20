@@ -1,0 +1,1306 @@
+<!doctype html>
+<html lang="ar" dir="rtl" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>نظام تسجيل الدخول - Portarage</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <style>
+    body {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #000000;
+      color: #ffffff;
+      height: 100%;
+      width: 100%;
+      overflow: auto;
+      position: relative;
+    }
+
+    html {
+      height: 100%;
+      width: 100%;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    .animated-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(ellipse at top, #1a0f00 0%, #000000 50%, #000000 100%);
+      z-index: 0;
+    }
+
+    .animated-background::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(218, 165, 32, 0.1) 0%, transparent 70%);
+      animation: rotate 20s linear infinite;
+    }
+
+    @keyframes rotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .particle {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      background: rgba(218, 165, 32, 0.5);
+      border-radius: 50%;
+      animation: float 15s infinite;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0) translateX(0);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100%) translateX(100px);
+        opacity: 0;
+      }
+    }
+
+    .main-container {
+      width: 100%;
+      min-height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .main-container.hide {
+      display: none;
+    }
+
+    .login-card {
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(20px);
+      border: 2px solid rgba(218, 165, 32, 0.3);
+      border-radius: 20px;
+      padding: 30px 30px;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(218, 165, 32, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-card::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, #DAA520, #FFD700, #DAA520, #B8860B);
+      background-size: 300% 300%;
+      border-radius: 30px;
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      animation: gradientShift 3s ease infinite;
+    }
+
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    .logo-container {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .logo {
+      width: 140px;
+      height: auto;
+      margin-bottom: 15px;
+      filter: drop-shadow(0 5px 15px rgba(218, 165, 32, 0.3));
+    }
+
+    .login-title {
+      font-size: 24px;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #FFD700 0%, #DAA520 50%, #B8860B 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .login-subtitle {
+      font-size: 14px;
+      text-align: center;
+      margin-bottom: 25px;
+      color: #cccccc;
+      font-weight: 400;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+      position: relative;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #DAA520;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(218, 165, 32, 0.3);
+      border-radius: 10px;
+      color: #ffffff;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: rgba(255, 215, 0, 0.6);
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 20px rgba(218, 165, 32, 0.2);
+    }
+
+    .form-input::placeholder {
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    .login-button {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #DAA520 0%, #FFD700 50%, #DAA520 100%);
+      background-size: 200% 200%;
+      border: none;
+      border-radius: 10px;
+      color: #000000;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      margin-top: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow: 0 5px 20px rgba(218, 165, 32, 0.4);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .login-button:hover::before {
+      left: 100%;
+    }
+
+    .login-button:hover {
+      background-position: 100% 0;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(218, 165, 32, 0.6);
+    }
+
+    .login-button:active {
+      transform: translateY(-1px);
+    }
+
+    .error-message {
+      background: rgba(220, 53, 69, 0.15);
+      border: 2px solid rgba(220, 53, 69, 0.5);
+      color: #ff6b6b;
+      padding: 14px;
+      border-radius: 10px;
+      margin-bottom: 25px;
+      text-align: center;
+      font-size: 14px;
+      display: none;
+      animation: shake 0.5s;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-10px); }
+      75% { transform: translateX(10px); }
+    }
+
+    .error-message.show {
+      display: block;
+    }
+
+    .dashboard {
+      display: none;
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background: #000000;
+    }
+
+    .dashboard.active {
+      display: block;
+    }
+
+    .dashboard-header {
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(26, 15, 0, 0.95) 100%);
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid rgba(218, 165, 32, 0.3);
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      top: -80px;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+      transition: top 0.3s ease;
+    }
+
+    .dashboard-header.visible {
+      top: 0;
+    }
+
+    .dashboard-logo {
+      width: 90px;
+      height: auto;
+      filter: drop-shadow(0 3px 10px rgba(218, 165, 32, 0.3));
+    }
+
+    .logout-button {
+      padding: 8px 18px;
+      background: rgba(220, 53, 69, 0.2);
+      border: 2px solid rgba(220, 53, 69, 0.5);
+      border-radius: 8px;
+      color: #ff6b6b;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .logout-button:hover {
+      background: rgba(220, 53, 69, 0.3);
+      border-color: rgba(220, 53, 69, 0.7);
+      transform: translateY(-2px);
+    }
+
+    .button-panel {
+      position: fixed;
+      right: -250px;
+      top: 100px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      z-index: 1001;
+      transition: all 0.3s ease;
+      pointer-events: auto;
+    }
+
+    .button-panel.visible {
+      right: 20px;
+    }
+
+    .nav-button {
+      padding: 12px 20px;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(218, 165, 32, 0.4);
+      border-radius: 10px;
+      color: #DAA520;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+      min-width: 160px;
+      position: relative;
+      overflow: hidden;
+      pointer-events: auto;
+      z-index: 1002;
+    }
+
+    .nav-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(218, 165, 32, 0.2), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .nav-button:hover::before {
+      left: 100%;
+    }
+
+    .nav-button:hover {
+      background: rgba(218, 165, 32, 0.2);
+      border-color: rgba(255, 215, 0, 0.6);
+      transform: scale(1.05);
+      box-shadow: 0 8px 25px rgba(218, 165, 32, 0.3);
+      color: #FFD700;
+    }
+
+    .nav-button.active {
+      background: rgba(218, 165, 32, 0.3);
+      border-color: rgba(255, 215, 0, 0.8);
+      box-shadow: 0 0 30px rgba(218, 165, 32, 0.5);
+      color: #FFD700;
+    }
+
+    .hover-trigger {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 200px;
+      height: 200px;
+      z-index: 50;
+      pointer-events: auto;
+    }
+
+    .welcome-screen {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 0;
+      padding: 0;
+      text-align: center;
+      position: relative;
+    }
+
+    .content-frame {
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 10;
+    }
+
+    .content-frame iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: #000000;
+      display: none;
+    }
+
+    .content-frame iframe.active {
+      display: block;
+    }
+
+    .welcome-title {
+      font-size: 56px;
+      font-weight: bold;
+      background: linear-gradient(135deg, #FFD700 0%, #DAA520 50%, #B8860B 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      max-width: 900px;
+      z-index: 100;
+      line-height: 1.4;
+    }
+
+    .floating-shapes {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      cursor: grab;
+    }
+
+    .floating-shapes:active {
+      cursor: grabbing;
+    }
+
+    .physics-object {
+      position: absolute;
+      cursor: grab;
+      transition: filter 0.2s ease;
+      user-select: none;
+    }
+
+    .physics-object:hover {
+      filter: brightness(1.2) drop-shadow(0 0 20px currentColor);
+    }
+
+    .physics-object:active {
+      cursor: grabbing;
+    }
+
+    .tire-svg {
+      width: 80px;
+      height: 80px;
+    }
+
+    .battery-svg {
+      width: 70px;
+      height: 90px;
+    }
+
+    .oil-svg {
+      width: 60px;
+      height: 100px;
+    }
+
+    @media (max-width: 768px) {
+      .login-card {
+        padding: 25px 20px;
+        max-width: 340px;
+      }
+
+      .logo {
+        width: 120px;
+      }
+
+      .login-title {
+        font-size: 20px;
+      }
+
+      .login-subtitle {
+        font-size: 12px;
+      }
+
+      .dashboard-header {
+        flex-direction: column;
+        gap: 10px;
+        padding: 15px;
+      }
+
+      .button-panel.visible {
+        right: 10px;
+      }
+
+      .button-panel {
+        top: 140px;
+        right: -270px;
+      }
+
+      .welcome-title {
+        font-size: 32px;
+      }
+
+      .floating-shapes {
+        height: 100%;
+      }
+      
+      .welcome-screen {
+        gap: 20px;
+        padding: 20px;
+      }
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+ </head>
+ <body class="h-full">
+  <div class="animated-background"></div>
+  <div class="particles" id="particles"></div>
+  <main><!-- صفحة تسجيل الدخول -->
+   <div class="main-container" id="loginContainer">
+    <div class="login-card">
+     <div class="logo-container"><img src="https://i.top4top.io/p_35860o72q1.png" alt="Portarage Logo" class="logo" onerror="this.style.display='none'; this.alt='Logo failed to load';">
+     </div>
+     <h1 class="login-title" id="loginTitle">مرحباً بك</h1>
+     <p class="login-subtitle" id="loginSubtitle">سجل دخولك للمتابعة</p>
+     <div class="error-message" id="errorMessage">
+      اسم المستخدم أو كلمة المرور غير صحيحة
+     </div>
+     <form id="loginForm">
+      <div class="form-group"><label for="username" class="form-label" id="usernameLabel">اسم المستخدم</label>
+       <div class="input-wrapper"><input type="text" id="username" class="form-input" required autocomplete="username" placeholder="أدخل اسم المستخدم">
+       </div>
+      </div>
+      <div class="form-group"><label for="password" class="form-label" id="passwordLabel">كلمة المرور</label>
+       <div class="input-wrapper"><input type="password" id="password" class="form-input" required autocomplete="current-password" placeholder="أدخل كلمة المرور">
+       </div>
+      </div><button type="submit" class="login-button" id="loginButton">دخول</button>
+     </form>
+    </div>
+   </div><!-- لوحة التحكم -->
+   <div class="dashboard" id="dashboard">
+    <div class="hover-trigger" id="hoverTrigger"></div>
+    <header class="dashboard-header" id="dashboardHeader"><img src="https://i.top4top.io/p_35860o72q1.png" alt="Portarage Logo" class="dashboard-logo" onerror="this.style.display='none'; this.alt='Logo failed to load';"> <button class="logout-button" id="logoutButton">تسجيل الخروج</button>
+    </header>
+    <div class="button-panel" id="buttonPanel"><button class="nav-button" id="tiresIncreaseBtn">زيادات التواير</button> <button class="nav-button" id="tiresSheetBtn">تواير الشيت</button> <button class="nav-button" id="batteryBtn">البطاريات</button> <button class="nav-button" id="oilsBtn">الزيت والفلتر</button>
+    </div>
+    <div class="welcome-screen" id="welcomeScreen">
+     <h1 class="welcome-title" id="welcomeTitle"></h1>
+     <div class="floating-shapes" id="floatingShapes"></div>
+    </div>
+    <div class="content-frame" id="contentFrame"><iframe id="tiresIncreaseFrame"></iframe> <iframe id="tiresSheetFrame"></iframe> <iframe id="batteryFrame"></iframe> <iframe id="oilsFrame"></iframe>
+    </div>
+   </div>
+  </main>
+  <script>
+    const defaultConfig = {
+      login_title: "مرحباً بك",
+      login_subtitle: "سجل دخولك للمتابعة",
+      username_label: "اسم المستخدم",
+      password_label: "كلمة المرور",
+      login_button: "دخول",
+      button_tires_increase: "زيادات التواير",
+      button_tires_sheet: "تواير الشيت",
+      button_battery: "البطاريات",
+      button_oils: "الزيت والفلتر",
+      logout_button: "تسجيل الخروج",
+      background_color: "#000000",
+      text_color: "#ffffff",
+      accent_color: "#DAA520",
+      font_family: "Segoe UI",
+      font_size: 16
+    };
+
+    let config = { ...defaultConfig };
+
+    // Create floating particles
+    const particlesContainer = document.getElementById('particles');
+    for (let i = 0; i < 30; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      particle.style.left = Math.random() * 100 + '%';
+      particle.style.animationDelay = Math.random() * 15 + 's';
+      particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+      particlesContainer.appendChild(particle);
+    }
+
+    // قائمة المستخدمين وكلمات المرور
+    const users = {
+      'Abdullah': 'portarage1',
+      'Suaad': 'portarage2',
+      'Laila': 'portarage3',
+      'Nasser': 'portarage4',
+      'Khalifa': 'portarage11',
+      'Azam': 'portarage6',
+      'Abdulwahab': 'portarage7',
+      'Bashar': 'portarage8',
+      'Ali': 'portarage9',
+      'Sabah': 'portarage10',
+      'Hamad': 'portarage12',
+      'Fawzi': 'portarage12',
+      'Mohamad': 'portarage7896',
+      'Salem': 'portarage7887'
+    };
+
+    const loginForm = document.getElementById('loginForm');
+    const loginContainer = document.getElementById('loginContainer');
+    const dashboard = document.getElementById('dashboard');
+    const errorMessage = document.getElementById('errorMessage');
+    const logoutButton = document.getElementById('logoutButton');
+    const buttonPanel = document.getElementById('buttonPanel');
+    const tiresIncreaseBtn = document.getElementById('tiresIncreaseBtn');
+    const tiresSheetBtn = document.getElementById('tiresSheetBtn');
+    const batteryBtn = document.getElementById('batteryBtn');
+    const oilsBtn = document.getElementById('oilsBtn');
+    const hoverTrigger = document.getElementById('hoverTrigger');
+    const dashboardHeader = document.getElementById('dashboardHeader');
+    const welcomeScreen = document.getElementById('welcomeScreen');
+    const tiresIncreaseFrame = document.getElementById('tiresIncreaseFrame');
+    const tiresSheetFrame = document.getElementById('tiresSheetFrame');
+    const batteryFrame = document.getElementById('batteryFrame');
+    const oilsFrame = document.getElementById('oilsFrame');
+
+    let currentFrame = null;
+    let titleAnimationComplete = false;
+
+    // Title animation function
+    function animateTitle() {
+      const titleElement = document.getElementById('welcomeTitle');
+      if (!titleElement) return;
+      
+      titleElement.innerHTML = '';
+      titleElement.style.display = 'none';
+      titleAnimationComplete = true;
+    }
+
+    // Physics engine variables
+    const objects = [];
+    const gravity = 0;
+    const friction = 0.995;
+    const bounciness = 0.9;
+    let isDragging = false;
+    let draggedObject = null;
+    let mouseX = 0;
+    let mouseY = 0;
+    let lastMouseX = 0;
+    let lastMouseY = 0;
+
+    // SVG templates
+    const tireSVG = `<svg class="tire-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="tireGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" style="stop-color:#1a1a1a;stop-opacity:1" />
+          <stop offset="70%" style="stop-color:#000000;stop-opacity:1" />
+        </radialGradient>
+        <radialGradient id="rimGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#DAA520;stop-opacity:1" />
+        </radialGradient>
+      </defs>
+      <circle cx="50" cy="50" r="45" fill="url(#tireGrad)" stroke="#333" stroke-width="2"/>
+      <circle cx="50" cy="50" r="30" fill="url(#rimGrad)" stroke="#B8860B" stroke-width="2"/>
+      <circle cx="50" cy="50" r="15" fill="#1a1a1a" stroke="#DAA520" stroke-width="1"/>
+      <path d="M 50 20 L 50 35 M 80 50 L 65 50 M 50 80 L 50 65 M 20 50 L 35 50" stroke="#B8860B" stroke-width="3" stroke-linecap="round"/>
+    </svg>`;
+
+    const batterySVG = `<svg class="battery-svg" viewBox="0 0 70 90" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="batteryGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#DAA520;stop-opacity:1" />
+        </linearGradient>
+      </defs>
+      <rect x="15" y="5" width="10" height="5" fill="#FFD700" rx="2"/>
+      <rect x="45" y="5" width="10" height="5" fill="#FFD700" rx="2"/>
+      <rect x="5" y="10" width="60" height="70" fill="url(#batteryGrad)" stroke="#B8860B" stroke-width="2" rx="5"/>
+      <rect x="15" y="25" width="40" height="8" fill="#000000" opacity="0.3" rx="2"/>
+      <rect x="15" y="40" width="40" height="8" fill="#000000" opacity="0.3" rx="2"/>
+      <rect x="15" y="55" width="40" height="8" fill="#000000" opacity="0.3" rx="2"/>
+      <text x="35" y="48" font-size="16" font-weight="bold" fill="#000000" text-anchor="middle">+</text>
+    </svg>`;
+
+    const oilSVG = `<svg class="oil-svg" viewBox="0 0 60 100" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="oilGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" style="stop-color:#DAA520;stop-opacity:1" />
+          <stop offset="50%" style="stop-color:#B8860B;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#8B6914;stop-opacity:1" />
+        </linearGradient>
+      </defs>
+      <rect x="15" y="5" width="30" height="10" fill="#1a1a1a" stroke="#DAA520" stroke-width="1" rx="2"/>
+      <path d="M 20 15 L 15 25 L 15 85 Q 15 95 25 95 L 35 95 Q 45 95 45 85 L 45 25 L 40 15 Z" 
+            fill="url(#oilGrad)" stroke="#B8860B" stroke-width="2"/>
+      <ellipse cx="30" cy="50" rx="8" ry="15" fill="#FFD700" opacity="0.3"/>
+      <rect x="20" y="40" width="20" height="3" fill="#000000" opacity="0.4" rx="1"/>
+      <rect x="20" y="55" width="20" height="3" fill="#000000" opacity="0.4" rx="1"/>
+      <path d="M 25 70 Q 30 75 35 70" stroke="#000000" stroke-width="2" fill="none" opacity="0.3"/>
+    </svg>`;
+
+    const dropSVG = `<svg width="40" height="50" viewBox="0 0 40 50" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="dropGrad" cx="40%" cy="30%">
+          <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+          <stop offset="50%" style="stop-color:#DAA520;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#B8860B;stop-opacity:1" />
+        </radialGradient>
+      </defs>
+      <path d="M 20 5 Q 15 15, 10 25 Q 5 35, 10 42 Q 15 48, 20 48 Q 25 48, 30 42 Q 35 35, 30 25 Q 25 15, 20 5 Z" 
+            fill="url(#dropGrad)" stroke="#B8860B" stroke-width="1"/>
+      <ellipse cx="16" cy="20" rx="4" ry="6" fill="#FFD700" opacity="0.4"/>
+    </svg>`;
+
+    class PhysicsObject {
+      constructor(x, y, type, svg) {
+        this.x = x;
+        this.y = y;
+        this.vx = (Math.random() - 0.5) * 2;
+        this.vy = (Math.random() - 0.5) * 2;
+        this.type = type;
+        this.rotation = Math.random() * 360;
+        this.rotationSpeed = (Math.random() - 0.5) * 2;
+        this.mass = type === 'battery' ? 1.2 : (type === 'tire' ? 1 : (type === 'drop' ? 0.5 : 0.8));
+        
+        this.element = document.createElement('div');
+        this.element.className = 'physics-object';
+        this.element.innerHTML = svg;
+        this.element.style.left = x + 'px';
+        this.element.style.top = y + 'px';
+        this.element.style.transform = `rotate(${this.rotation}deg)`;
+        
+        const sizes = {
+          tire: { width: 80, height: 80 },
+          battery: { width: 70, height: 90 },
+          oil: { width: 60, height: 100 },
+          drop: { width: 40, height: 50 }
+        };
+        
+        this.width = sizes[type].width;
+        this.height = sizes[type].height;
+        
+        const self = this;
+        this.element.addEventListener('mousedown', function(e) {
+          e.preventDefault();
+          isDragging = true;
+          draggedObject = self;
+          self.vx = 0;
+          self.vy = 0;
+          lastMouseX = e.clientX;
+          lastMouseY = e.clientY;
+        });
+      }
+      
+      update(containerWidth, containerHeight) {
+        if (draggedObject !== this) {
+          this.vy += gravity;
+          this.vx *= friction;
+          this.vy *= friction;
+          
+          this.x += this.vx;
+          this.y += this.vy;
+          this.rotation += this.rotationSpeed;
+          
+          if (this.x <= 0) {
+            this.x = 0;
+            this.vx = Math.abs(this.vx) * bounciness;
+            this.rotationSpeed = -this.rotationSpeed * 0.8;
+          }
+          if (this.x + this.width >= containerWidth) {
+            this.x = containerWidth - this.width;
+            this.vx = -Math.abs(this.vx) * bounciness;
+            this.rotationSpeed = -this.rotationSpeed * 0.8;
+          }
+          if (this.y <= 0) {
+            this.y = 0;
+            this.vy = Math.abs(this.vy) * bounciness;
+            this.rotationSpeed = -this.rotationSpeed * 0.8;
+          }
+          if (this.y + this.height >= containerHeight) {
+            this.y = containerHeight - this.height;
+            this.vy = -Math.abs(this.vy) * bounciness;
+            this.rotationSpeed *= 0.8;
+            if (Math.abs(this.vy) < 0.5) this.vy = 0;
+          }
+        }
+        
+        this.element.style.left = this.x + 'px';
+        this.element.style.top = this.y + 'px';
+        this.element.style.transform = `rotate(${this.rotation}deg)`;
+      }
+      
+      checkCollision(other) {
+        const dx = (this.x + this.width / 2) - (other.x + other.width / 2);
+        const dy = (this.y + this.height / 2) - (other.y + other.height / 2);
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const minDistance = (this.width + other.width) / 3;
+        
+        if (distance < minDistance) {
+          const angle = Math.atan2(dy, dx);
+          const totalMass = this.mass + other.mass;
+          const overlap = minDistance - distance;
+          
+          this.x += Math.cos(angle) * overlap * (other.mass / totalMass);
+          this.y += Math.sin(angle) * overlap * (other.mass / totalMass);
+          other.x -= Math.cos(angle) * overlap * (this.mass / totalMass);
+          other.y -= Math.sin(angle) * overlap * (this.mass / totalMass);
+          
+          const relativeVx = this.vx - other.vx;
+          const relativeVy = this.vy - other.vy;
+          const speed = Math.sqrt(relativeVx * relativeVx + relativeVy * relativeVy);
+          
+          const newVx1 = ((this.mass - other.mass) * this.vx + 2 * other.mass * other.vx) / totalMass;
+          const newVy1 = ((this.mass - other.mass) * this.vy + 2 * other.mass * other.vy) / totalMass;
+          const newVx2 = ((other.mass - this.mass) * other.vx + 2 * this.mass * this.vx) / totalMass;
+          const newVy2 = ((other.mass - this.mass) * other.vy + 2 * this.mass * this.vy) / totalMass;
+          
+          this.vx = newVx1 * bounciness;
+          this.vy = newVy1 * bounciness;
+          other.vx = newVx2 * bounciness;
+          other.vy = newVy2 * bounciness;
+          
+          this.rotationSpeed = (Math.random() - 0.5) * speed;
+          other.rotationSpeed = (Math.random() - 0.5) * speed;
+        }
+      }
+    }
+
+    function initPhysicsObjects() {
+      const container = document.getElementById('floatingShapes');
+      if (!container) return;
+      
+      container.innerHTML = '';
+      objects.length = 0;
+      
+      const containerRect = container.getBoundingClientRect();
+      
+      const types = [
+        { type: 'tire', svg: tireSVG },
+        { type: 'drop', svg: dropSVG },
+        { type: 'battery', svg: batterySVG },
+        { type: 'oil', svg: oilSVG },
+        { type: 'tire', svg: tireSVG },
+        { type: 'drop', svg: dropSVG },
+        { type: 'battery', svg: batterySVG },
+        { type: 'oil', svg: oilSVG },
+        { type: 'tire', svg: tireSVG },
+        { type: 'drop', svg: dropSVG },
+        { type: 'battery', svg: batterySVG },
+        { type: 'oil', svg: oilSVG },
+        { type: 'tire', svg: tireSVG },
+        { type: 'drop', svg: dropSVG },
+        { type: 'battery', svg: batterySVG },
+        { type: 'oil', svg: oilSVG },
+        { type: 'tire', svg: tireSVG },
+        { type: 'drop', svg: dropSVG },
+        { type: 'battery', svg: batterySVG },
+        { type: 'oil', svg: oilSVG },
+        { type: 'tire', svg: tireSVG },
+        { type: 'drop', svg: dropSVG },
+        { type: 'battery', svg: batterySVG },
+        { type: 'oil', svg: oilSVG }
+      ];
+      
+      const cols = 6;
+      const rows = 4;
+      const marginX = containerRect.width * 0.1;
+      const marginY = containerRect.height * 0.1;
+      const cellWidth = (containerRect.width - marginX * 2) / cols;
+      const cellHeight = (containerRect.height - marginY * 2) / rows;
+      
+      types.forEach((item, index) => {
+        const row = Math.floor(index / cols);
+        const col = index % cols;
+        const x = marginX + col * cellWidth + cellWidth / 2 - 40 + (Math.random() - 0.5) * 30;
+        const y = marginY + row * cellHeight + cellHeight / 2 - 40 + (Math.random() - 0.5) * 30;
+        const obj = new PhysicsObject(x, y, item.type, item.svg);
+        objects.push(obj);
+        container.appendChild(obj.element);
+      });
+    }
+
+    function animate() {
+      const container = document.getElementById('floatingShapes');
+      if (!container || !dashboard.classList.contains('active')) {
+        requestAnimationFrame(animate);
+        return;
+      }
+      
+      const containerRect = container.getBoundingClientRect();
+      
+      objects.forEach(obj => {
+        obj.update(containerRect.width, containerRect.height);
+      });
+      
+      for (let i = 0; i < objects.length; i++) {
+        for (let j = i + 1; j < objects.length; j++) {
+          objects[i].checkCollision(objects[j]);
+        }
+      }
+      
+      requestAnimationFrame(animate);
+    }
+
+    document.addEventListener('mousemove', function(e) {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      
+      if (isDragging && draggedObject) {
+        const container = document.getElementById('floatingShapes');
+        const rect = container.getBoundingClientRect();
+        draggedObject.x = e.clientX - rect.left - draggedObject.width / 2;
+        draggedObject.y = e.clientY - rect.top - draggedObject.height / 2;
+        
+        draggedObject.vx = (e.clientX - lastMouseX) * 0.5;
+        draggedObject.vy = (e.clientY - lastMouseY) * 0.5;
+        
+        lastMouseX = e.clientX;
+        lastMouseY = e.clientY;
+      }
+    });
+
+    document.addEventListener('mouseup', function() {
+      if (isDragging && draggedObject) {
+        draggedObject.rotationSpeed = (Math.random() - 0.5) * 10;
+      }
+      isDragging = false;
+      draggedObject = null;
+    });
+
+    const pageUrls = {
+      tiresIncrease: 'https://portaragetiers.netlify.app/',
+      tiresSheet: 'https://portaragestiers.netlify.app/',
+      battery: 'https://portaragebatteries.netlify.app/',
+      oils: 'https://portarageoils.netlify.app/'
+    };
+
+    let hideMenuTimeout = null;
+
+    function loadPage(iframe, url) {
+      welcomeScreen.style.display = 'none';
+      
+      const allFrames = [tiresIncreaseFrame, tiresSheetFrame, batteryFrame, oilsFrame];
+      allFrames.forEach(frame => frame.classList.remove('active'));
+      
+      iframe.classList.add('active');
+      
+      if (!iframe.src || iframe.src === '') {
+        iframe.src = url;
+      }
+      
+      currentFrame = iframe;
+      
+      if (hideMenuTimeout) {
+        clearTimeout(hideMenuTimeout);
+      }
+      hideMenuTimeout = setTimeout(function() {
+        dashboardHeader.classList.remove('visible');
+        buttonPanel.classList.remove('visible');
+      }, 5000);
+    }
+
+    function showWelcome() {
+      const allFrames = [tiresIncreaseFrame, tiresSheetFrame, batteryFrame, oilsFrame];
+      allFrames.forEach(frame => frame.classList.remove('active'));
+      
+      welcomeScreen.style.display = 'flex';
+      currentFrame = null;
+    }
+
+    hoverTrigger.addEventListener('mouseenter', function() {
+      dashboardHeader.classList.add('visible');
+      buttonPanel.classList.add('visible');
+    });
+
+    hoverTrigger.addEventListener('mouseleave', function() {
+      setTimeout(function() {
+        if (!dashboardHeader.matches(':hover') && !buttonPanel.matches(':hover')) {
+          dashboardHeader.classList.remove('visible');
+          buttonPanel.classList.remove('visible');
+        }
+      }, 100);
+    });
+
+    dashboardHeader.addEventListener('mouseleave', function() {
+      setTimeout(function() {
+        if (!buttonPanel.matches(':hover') && !hoverTrigger.matches(':hover')) {
+          dashboardHeader.classList.remove('visible');
+          buttonPanel.classList.remove('visible');
+        }
+      }, 100);
+    });
+
+    buttonPanel.addEventListener('mouseleave', function() {
+      setTimeout(function() {
+        if (!dashboardHeader.matches(':hover') && !hoverTrigger.matches(':hover')) {
+          dashboardHeader.classList.remove('visible');
+          buttonPanel.classList.remove('visible');
+        }
+      }, 100);
+    });
+
+    const savedUsername = localStorage.getItem('savedUsername');
+    const savedPassword = localStorage.getItem('savedPassword');
+    if (savedUsername && savedPassword) {
+      document.getElementById('username').value = savedUsername;
+      document.getElementById('password').value = savedPassword;
+    }
+
+    if (sessionStorage.getItem('isLoggedIn') === 'true') {
+      loginContainer.classList.add('hide');
+      dashboard.classList.add('active');
+      setTimeout(() => {
+        initPhysicsObjects();
+        animateTitle();
+      }, 100);
+    }
+    
+    animate();
+
+    loginForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      if (users[username] && users[username] === password) {
+        errorMessage.classList.remove('show');
+        sessionStorage.setItem('isLoggedIn', 'true');
+        
+        localStorage.setItem('savedUsername', username);
+        localStorage.setItem('savedPassword', password);
+        
+        const welcomeMessage = document.createElement('div');
+        welcomeMessage.style.cssText = `
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.95);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 9999;
+          animation: fadeIn 0.5s ease;
+        `;
+        
+        const welcomeContent = document.createElement('div');
+        welcomeContent.style.cssText = `
+          text-align: center;
+          animation: scaleIn 0.8s ease;
+        `;
+        
+        welcomeContent.innerHTML = `
+          <h1 style="font-size: 48px; font-weight: bold; background: linear-gradient(135deg, #FFD700 0%, #DAA520 50%, #B8860B 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 20px;">
+            مرحباً ${username}! 👋
+          </h1>
+          <p style="font-size: 24px; background: linear-gradient(135deg, #FFD700 0%, #DAA520 50%, #B8860B 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin: 0;">
+            نتمنى لك تجربة ممتعة
+          </p>
+        `;
+        
+        welcomeMessage.appendChild(welcomeContent);
+        document.body.appendChild(welcomeMessage);
+        
+        const style = document.createElement('style');
+        style.textContent = `
+          @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+          }
+          @keyframes scaleIn {
+            from { transform: scale(0.5); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+          }
+        `;
+        document.head.appendChild(style);
+        
+        setTimeout(() => {
+          welcomeMessage.style.animation = 'fadeOut 0.5s ease';
+          welcomeMessage.style.opacity = '0';
+          
+          const fadeOutStyle = document.createElement('style');
+          fadeOutStyle.textContent = `
+            @keyframes fadeOut {
+              from { opacity: 1; }
+              to { opacity: 0; }
+            }
+          `;
+          document.head.appendChild(fadeOutStyle);
+          
+          setTimeout(() => {
+            welcomeMessage.remove();
+            loginContainer.classList.add('hide');
+            dashboard.classList.add('active');
+            setTimeout(() => {
+              initPhysicsObjects();
+              animateTitle();
+            }, 100);
+          }, 500);
+        }, 6000);
+      } else {
+        errorMessage.classList.add('show');
+      }
+    });
+
+    logoutButton.addEventListener('click', function() {
+      sessionStorage.removeItem('isLoggedIn');
+      dashboard.classList.remove('active');
+      loginContainer.classList.remove('hide');
+      document.getElementById('username').value = '';
+      document.getElementById('password').value = '';
+      errorMessage.classList.remove('show');
+      
+      dashboardHeader.classList.remove('visible');
+      buttonPanel.classList.remove('visible');
+      
+      showWelcome();
+      
+      tiresIncreaseFrame.src = '';
+      tiresSheetFrame.src = '';
+      batteryFrame.src = '';
+      oilsFrame.src = '';
+    });
+
+    tiresIncreaseBtn.addEventListener('click', function() {
+      loadPage(tiresIncreaseFrame, pageUrls.tiresIncrease);
+    });
+
+    tiresSheetBtn.addEventListener('click', function() {
+      loadPage(tiresSheetFrame, pageUrls.tiresSheet);
+    });
+
+    batteryBtn.addEventListener('click', function() {
+      loadPage(batteryFrame, pageUrls.battery);
+    });
+
+    oilsBtn.addEventListener('click', function() {
+      loadPage(oilsFrame, pageUrls.oils);
+    });
+
+    async function onConfigChange(newConfig) {
+      const customFont = newConfig.font_family || defaultConfig.font_family;
+      const baseFontSize = newConfig.font_size || defaultConfig.font_size;
+      const backgroundColor = newConfig.background_color || defaultConfig.background_color;
+      const textColor = newConfig.text_color || defaultConfig.text_color;
+      const accentColor = newConfig.accent_color || defaultConfig.accent_color;
+
+      document.body.style.fontFamily = `${customFont}, Arial, sans-serif`;
+      document.body.style.fontSize = `${baseFontSize}px`;
+      document.body.style.background = backgroundColor;
+      document.body.style.color = textColor;
+
+      document.getElementById('loginTitle').textContent = newConfig.login_title || defaultConfig.login_title;
+      document.getElementById('loginSubtitle').textContent = newConfig.login_subtitle || defaultConfig.login_subtitle;
+      document.getElementById('usernameLabel').textContent = newConfig.username_label || defaultConfig.username_label;
+      document.getElementById('passwordLabel').textContent = newConfig.password_label || defaultConfig.password_label;
+      document.getElementById('loginButton').textContent = newConfig.login_button || defaultConfig.login_button;
+      document.getElementById('logoutButton').textContent = newConfig.logout_button || defaultConfig.logout_button;
+      document.getElementById('tiresIncreaseBtn').textContent = newConfig.button_tires_increase || defaultConfig.button_tires_increase;
+      document.getElementById('tiresSheetBtn').textContent = newConfig.button_tires_sheet || defaultConfig.button_tires_sheet;
+      document.getElementById('batteryBtn').textContent = newConfig.button_battery || defaultConfig.button_battery;
+      document.getElementById('oilsBtn').textContent = newConfig.button_oils || defaultConfig.button_oils;
+
+      document.querySelector('.login-title').style.fontSize = `${baseFontSize * 1.5}px`;
+      document.querySelector('.login-subtitle').style.fontSize = `${baseFontSize * 0.875}px`;
+      document.querySelector('.login-subtitle').style.color = textColor;
+
+      const formLabels = document.querySelectorAll('.form-label');
+      formLabels.forEach(label => {
+        label.style.fontSize = `${baseFontSize * 0.8125}px`;
+        label.style.color = accentColor;
+      });
+
+      const formInputs = document.querySelectorAll('.form-input');
+      formInputs.forEach(input => {
+        input.style.fontSize = `${baseFontSize * 0.875}px`;
+        input.style.color = textColor;
+      });
+
+      const loginBtn = document.querySelector('.login-button');
+      loginBtn.style.fontSize = `${baseFontSize}px`;
+
+      const navButtons = document.querySelectorAll('.nav-button');
+      navButtons.forEach(button => {
+        button.style.color = accentColor;
+      });
+
+      const logoutBtn = document.querySelector('.logout-button');
+      logoutBtn.style.fontSize = `${baseFontSize * 0.8125}px`;
+    }
+
+    function mapToCapabilities(config) {
+      return {
+        recolorables: [
+          {
+            get: () => config.background_color || defaultConfig.background_color,
+            set: (value) => {
+              config.background_color = value;
+              window.elementSdk.setConfig({ background_color: value });
+            }
+          },
+          {
+            get: () => config.text_color || defaultConfig.text_color,
+            set: (value) => {
+              config.text_color = value;
+              window.elementSdk.setConfig({ text_color: value });
+            }
+          },
+          {
+            get: () => config.accent_color || defaultConfig.accent_color,
+            set: (value) => {
+              config.accent_color = value;
+              window.elementSdk.setConfig({ accent_color: value });
+            }
+          }
+        ],
+        borderables: [],
+        fontEditable: {
+          get: () => config.font_family || defaultConfig.font_family,
+          set: (value) => {
+            config.font_family = value;
+            window.elementSdk.setConfig({ font_family: value });
+          }
+        },
+        fontSizeable: {
+          get: () => config.font_size || defaultConfig.font_size,
+          set: (value) => {
+            config.font_size = value;
+            window.elementSdk.setConfig({ font_size: value });
+          }
+        }
+      };
+    }
+
+    function mapToEditPanelValues(config) {
+      return new Map([
+        ["login_title", config.login_title || defaultConfig.login_title],
+        ["login_subtitle", config.login_subtitle || defaultConfig.login_subtitle],
+        ["username_label", config.username_label || defaultConfig.username_label],
+        ["password_label", config.password_label || defaultConfig.password_label],
+        ["login_button", config.login_button || defaultConfig.login_button],
+        ["button_tires_increase", config.button_tires_increase || defaultConfig.button_tires_increase],
+        ["button_tires_sheet", config.button_tires_sheet || defaultConfig.button_tires_sheet],
+        ["button_battery", config.button_battery || defaultConfig.button_battery],
+        ["button_oils", config.button_oils || defaultConfig.button_oils],
+        ["logout_button", config.logout_button || defaultConfig.logout_button]
+      ]);
+    }
+
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities,
+        mapToEditPanelValues
+      });
+
+      config = window.elementSdk.config;
+      onConfigChange(config);
+    }
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b0d5c4ad5368308',t:'MTc2NjIxNTA1Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
