@@ -186,17 +186,15 @@
    </div>
   </div>
   <script>
-        // جدول تحويل أسماء الماركات من الإنجليزي إلى العربي
         const brandTranslations = {
             'MICHELIN': 'ميشلان',
             'BRIDGESTONE': 'بريدجستون',
             'GOODYEAR': 'جوديير',
             'CONTINENTAL': 'كونتيننتال',
-            'PIRELLI': 'بيريللي',
+            'PIRELLI': 'بيريلي',
             'DUNLOP': 'دنلوب',
             'YOKOHAMA': 'يوكوهاما',
             'YOKOHAMA AI TERRA TIRE': 'يوكوهاما حجري(جميع التضاريس)',
-            'AI TERRA TIRE': 'يوكوهاما حجري(جميع التضاريس)',
             'HANKOOK': 'هانكوك',
             'KUMHO': 'كومهو',
             'TOYO': 'تويو',
@@ -205,17 +203,16 @@
             'MAXXIS': 'ماكسس',
             'BFGOODRICH': 'بي إف جودريتش',
             'COOPER': 'كوبر',
-            'MAYRUN': 'مايرن',
+            'MAYRUN': 'مايرون',
             'ZETUM': 'زيتوم',
             'APOLLO': 'أبولو',
-            'KINFOREST': 'كينفوريست',
+            'KINFOREST': 'كين فورست',
             'ROADSTONE': 'رودستون',
             'SUMITOMO': 'سوميتومو',
             'FIRESTONE': 'فايرستون',
             'ULTRAFORCE': 'ألترا فورس'
         };
 
-        // جدول تحويل الدول من الإنجليزي إلى العربي
         const countryTranslations = {
             'CHINA': 'صيني 🇨🇳',
             'THAILAND': 'تايلندي 🇹🇭',
@@ -356,6 +353,8 @@
             const upperText = text.toUpperCase().replace(/\s+/g, '');
             return upperText.includes('RF') || 
                    upperText.includes('R-F') ||
+                    upperText.includes('ZP') ||
+                    upperText.includes('zp') ||
                    upperText.includes('RFT') || 
                    upperText.includes('RUNFLAT') || 
                    upperText.includes('RUNFLAT');
