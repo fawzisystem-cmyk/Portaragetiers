@@ -3,1304 +3,930 @@
  <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>نظام تسجيل الدخول - Portarage</title>
+  <title>بحث الإطارات</title>
   <script src="/_sdk/element_sdk.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #000000;
-      color: #ffffff;
-      height: 100%;
-      width: 100%;
-      overflow: auto;
-      position: relative;
-    }
-
-    html {
-      height: 100%;
-      width: 100%;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    .animated-background {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(ellipse at top, #1a0f00 0%, #000000 50%, #000000 100%);
-      z-index: 0;
-    }
-
-    .animated-background::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(circle, rgba(218, 165, 32, 0.1) 0%, transparent 70%);
-      animation: rotate 20s linear infinite;
-    }
-
-    @keyframes rotate {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    .particles {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      z-index: 1;
-      pointer-events: none;
-    }
-
-    .particle {
-      position: absolute;
-      width: 3px;
-      height: 3px;
-      background: rgba(218, 165, 32, 0.5);
-      border-radius: 50%;
-      animation: float 15s infinite;
-    }
-
-    @keyframes float {
-      0%, 100% {
-        transform: translateY(0) translateX(0);
-        opacity: 0;
-      }
-      10% {
-        opacity: 1;
-      }
-      90% {
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(-100%) translateX(100px);
-        opacity: 0;
-      }
-    }
-
-    .main-container {
-      width: 100%;
-      min-height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 40px 20px;
-      position: relative;
-      z-index: 2;
-    }
-
-    .main-container.hide {
-      display: none;
-    }
-
-    .login-card {
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(20px);
-      border: 2px solid rgba(218, 165, 32, 0.3);
-      border-radius: 20px;
-      padding: 30px 30px;
-      width: 100%;
-      max-width: 380px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(218, 165, 32, 0.1);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .login-card::before {
-      content: '';
-      position: absolute;
-      top: -2px;
-      left: -2px;
-      right: -2px;
-      bottom: -2px;
-      background: linear-gradient(45deg, #DAA520, #FFD700, #DAA520, #B8860B);
-      background-size: 300% 300%;
-      border-radius: 30px;
-      z-index: -1;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      animation: gradientShift 3s ease infinite;
-    }
-
-    @keyframes gradientShift {
-      0%, 100% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-    }
-
-    .logo-container {
-      text-align: center;
-      margin-bottom: 25px;
-    }
-
-    .logo {
-      width: 140px;
-      height: auto;
-      margin-bottom: 15px;
-      filter: drop-shadow(0 5px 15px rgba(218, 165, 32, 0.3));
-    }
-
-    .login-title {
-      font-size: 24px;
-      font-weight: bold;
-      text-align: center;
-      margin-bottom: 8px;
-      background: linear-gradient(135deg, #FFD700 0%, #DAA520 50%, #B8860B 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .login-subtitle {
-      font-size: 14px;
-      text-align: center;
-      margin-bottom: 25px;
-      color: #cccccc;
-      font-weight: 400;
-    }
-
-    .form-group {
-      margin-bottom: 18px;
-      position: relative;
-    }
-
-    .form-label {
-      display: block;
-      margin-bottom: 8px;
-      font-size: 13px;
-      font-weight: 600;
-      color: #DAA520;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .input-wrapper {
-      position: relative;
-    }
-
-    .form-input {
-      width: 100%;
-      padding: 12px 16px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 2px solid rgba(218, 165, 32, 0.3);
-      border-radius: 10px;
-      color: #ffffff;
-      font-size: 14px;
-      transition: all 0.3s ease;
-    }
-
-    .form-input:focus {
-      outline: none;
-      border-color: rgba(255, 215, 0, 0.6);
-      background: rgba(255, 255, 255, 0.08);
-      box-shadow: 0 0 20px rgba(218, 165, 32, 0.2);
-    }
-
-    .form-input::placeholder {
-      color: rgba(255, 255, 255, 0.3);
-    }
-
-    .login-button {
-      width: 100%;
-      padding: 14px;
-      background: linear-gradient(135deg, #DAA520 0%, #FFD700 50%, #DAA520 100%);
-      background-size: 200% 200%;
-      border: none;
-      border-radius: 10px;
-      color: #000000;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.4s ease;
-      margin-top: 10px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      box-shadow: 0 5px 20px rgba(218, 165, 32, 0.4);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .login-button::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-      transition: left 0.5s ease;
-    }
-
-    .login-button:hover::before {
-      left: 100%;
-    }
-
-    .login-button:hover {
-      background-position: 100% 0;
-      transform: translateY(-3px);
-      box-shadow: 0 8px 30px rgba(218, 165, 32, 0.6);
-    }
-
-    .login-button:active {
-      transform: translateY(-1px);
-    }
-
-    .error-message {
-      background: rgba(220, 53, 69, 0.15);
-      border: 2px solid rgba(220, 53, 69, 0.5);
-      color: #ff6b6b;
-      padding: 14px;
-      border-radius: 10px;
-      margin-bottom: 25px;
-      text-align: center;
-      font-size: 14px;
-      display: none;
-      animation: shake 0.5s;
-    }
-
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      25% { transform: translateX(-10px); }
-      75% { transform: translateX(10px); }
-    }
-
-    .error-message.show {
-      display: block;
-    }
-
-    .dashboard {
-      display: none;
-      width: 100%;
-      height: 100%;
-      position: fixed;
-      top: 0;
-      left: 0;
-      background: #000000;
-    }
-
-    .dashboard.active {
-      display: block;
-    }
-
-    .dashboard-header {
-      background: linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(26, 15, 0, 0.95) 100%);
-      backdrop-filter: blur(10px);
-      border-bottom: 2px solid rgba(218, 165, 32, 0.3);
-      padding: 15px 30px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: fixed;
-      top: -80px;
-      left: 0;
-      right: 0;
-      z-index: 1000;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
-      transition: top 0.3s ease;
-    }
-
-    .dashboard-header.visible {
-      top: 0;
-    }
-
-    .dashboard-logo {
-      width: 90px;
-      height: auto;
-      filter: drop-shadow(0 3px 10px rgba(218, 165, 32, 0.3));
-    }
-
-    .logout-button {
-      padding: 8px 18px;
-      background: rgba(220, 53, 69, 0.2);
-      border: 2px solid rgba(220, 53, 69, 0.5);
-      border-radius: 8px;
-      color: #ff6b6b;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .logout-button:hover {
-      background: rgba(220, 53, 69, 0.3);
-      border-color: rgba(220, 53, 69, 0.7);
-      transform: translateY(-2px);
-    }
-
-    .button-panel {
-      position: fixed;
-      right: -250px;
-      top: 100px;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      z-index: 1001;
-      transition: all 0.3s ease;
-      pointer-events: auto;
-    }
-
-    .button-panel.visible {
-      right: 20px;
-    }
-
-    .nav-button {
-      padding: 12px 20px;
-      background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(10px);
-      border: 2px solid rgba(218, 165, 32, 0.4);
-      border-radius: 10px;
-      color: #DAA520;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-align: center;
-      min-width: 160px;
-      position: relative;
-      overflow: hidden;
-      pointer-events: auto;
-      z-index: 1002;
-    }
-
-    .nav-button::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(218, 165, 32, 0.2), transparent);
-      transition: left 0.5s ease;
-    }
-
-    .nav-button:hover::before {
-      left: 100%;
-    }
-
-    .nav-button:hover {
-      background: rgba(218, 165, 32, 0.2);
-      border-color: rgba(255, 215, 0, 0.6);
-      transform: scale(1.05);
-      box-shadow: 0 8px 25px rgba(218, 165, 32, 0.3);
-      color: #FFD700;
-    }
-
-    .nav-button.active {
-      background: rgba(218, 165, 32, 0.3);
-      border-color: rgba(255, 215, 0, 0.8);
-      box-shadow: 0 0 30px rgba(218, 165, 32, 0.5);
-      color: #FFD700;
-    }
-
-    .hover-trigger {
-      position: fixed;
-      top: 0;
-      right: 0;
-      width: 200px;
-      height: 200px;
-      z-index: 50;
-      pointer-events: auto;
-    }
-
-    .welcome-screen {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      gap: 0;
-      padding: 0;
-      text-align: center;
-      position: relative;
-    }
-
-    .content-frame {
-      width: 100%;
-      height: 100%;
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 10;
-    }
-
-    .content-frame iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-      background: #000000;
-      display: none;
-    }
-
-    .content-frame iframe.active {
-      display: block;
-    }
-
-    .welcome-title {
-      font-size: 56px;
-      font-weight: bold;
-      background: linear-gradient(135deg, #FFD700 0%, #DAA520 50%, #B8860B 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 90%;
-      max-width: 900px;
-      z-index: 100;
-      line-height: 1.4;
-    }
-
-    .floating-shapes {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      cursor: grab;
-    }
-
-    .floating-shapes:active {
-      cursor: grabbing;
-    }
-
-    .physics-object {
-      position: absolute;
-      cursor: grab;
-      transition: filter 0.2s ease;
-      user-select: none;
-    }
-
-    .physics-object:hover {
-      filter: brightness(1.2) drop-shadow(0 0 20px currentColor);
-    }
-
-    .physics-object:active {
-      cursor: grabbing;
-    }
-
-    .tire-svg {
-      width: 80px;
-      height: 80px;
-    }
-
-    .battery-svg {
-      width: 70px;
-      height: 90px;
-    }
-
-    .oil-svg {
-      width: 60px;
-      height: 100px;
-    }
-
-    @media (max-width: 768px) {
-      .login-card {
-        padding: 25px 20px;
-        max-width: 340px;
-      }
-
-      .logo {
-        width: 120px;
-      }
-
-      .login-title {
-        font-size: 20px;
-      }
-
-      .login-subtitle {
-        font-size: 12px;
-      }
-
-      .dashboard-header {
-        flex-direction: column;
-        gap: 10px;
-        padding: 15px;
-      }
-
-      .button-panel.visible {
-        right: 10px;
-      }
-
-      .button-panel {
-        top: 140px;
-        right: -270px;
-      }
-
-      .welcome-title {
-        font-size: 32px;
-      }
-
-      .floating-shapes {
-        height: 100%;
-      }
-      
-      .welcome-screen {
-        gap: 20px;
-        padding: 20px;
-      }
-    }
-  </style>
+        body {
+            box-sizing: border-box;
+        }
+        
+        * {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .loader {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #FFD700;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #000000;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            z-index: 1000;
+            animation: slideUp 0.3s ease-out;
+            font-weight: bold;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translate(-50%, 20px);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+        
+        .suggestions-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #1a1a1a;
+            border: 2px solid #FFD700;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 100;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        
+        .suggestion-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            color: #FFD700;
+            border-bottom: 1px solid #333;
+            transition: all 0.2s;
+        }
+        
+        .suggestion-item:hover {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #000000;
+        }
+        
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+        
+        .table-row {
+            transition: all 0.2s;
+        }
+        
+        .table-row:hover {
+            background: #2a2a2a !important;
+            transform: scale(1.01);
+        }
+        
+        .filter-toggle {
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.3s;
+        }
+        
+        .filter-toggle:hover {
+            opacity: 0.8;
+        }
+        
+        .arrow {
+            display: inline-block;
+            transition: transform 0.3s;
+        }
+        
+        .arrow.rotated {
+            transform: rotate(180deg);
+        }
+    </style>
   <style>@view-transition { navigation: auto; }</style>
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
-  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
  </head>
  <body class="h-full">
-  <div class="animated-background"></div>
-  <div class="particles" id="particles"></div>
-  <main><!-- صفحة تسجيل الدخول -->
-   <div class="main-container" id="loginContainer">
-    <div class="login-card">
-     <div class="logo-container"><img src="https://i.top4top.io/p_35860o72q1.png" alt="Portarage Logo" class="logo" onerror="this.style.display='none'; this.alt='Logo failed to load';">
-     </div>
-     <h1 class="login-title" id="loginTitle">مرحباً بك</h1>
-     <p class="login-subtitle" id="loginSubtitle">سجل دخولك للمتابعة</p>
-     <div class="error-message" id="errorMessage">
-      اسم المستخدم أو كلمة المرور غير صحيحة
-     </div>
-     <form id="loginForm">
-      <div class="form-group"><label for="username" class="form-label" id="usernameLabel">اسم المستخدم</label>
-       <div class="input-wrapper"><input type="text" id="username" class="form-input" required autocomplete="username" placeholder="أدخل اسم المستخدم">
-       </div>
-      </div>
-      <div class="form-group"><label for="password" class="form-label" id="passwordLabel">كلمة المرور</label>
-       <div class="input-wrapper"><input type="password" id="password" class="form-input" required autocomplete="current-password" placeholder="أدخل كلمة المرور">
-       </div>
-      </div><button type="submit" class="login-button" id="loginButton">دخول</button>
-     </form>
-    </div>
-   </div><!-- لوحة التحكم -->
-   <div class="dashboard" id="dashboard">
-    <div class="hover-trigger" id="hoverTrigger"></div>
-    <header class="dashboard-header" id="dashboardHeader"><img src="https://i.top4top.io/p_35860o72q1.png" alt="Portarage Logo" class="dashboard-logo" onerror="this.style.display='none'; this.alt='Logo failed to load';"> <button class="logout-button" id="logoutButton">تسجيل الخروج</button>
-    </header>
-    <div class="button-panel" id="buttonPanel"><button class="nav-button" id="tiresIncreaseBtn">زيادات التواير</button> <button class="nav-button" id="tiresSheetBtn">تواير الشيت</button> <button class="nav-button" id="batteryBtn">البطاريات</button> <button class="nav-button" id="oilsBtn">الزيت والفلتر</button>
-    </div>
-    <div class="welcome-screen" id="welcomeScreen">
-     <h1 class="welcome-title" id="welcomeTitle"></h1>
-     <div class="floating-shapes" id="floatingShapes"></div>
-    </div>
-    <div class="content-frame" id="contentFrame"><iframe id="tiresIncreaseFrame"></iframe> <iframe id="tiresSheetFrame"></iframe> <iframe id="batteryFrame"></iframe> <iframe id="oilsFrame"></iframe>
+  <div class="h-full w-full overflow-auto" style="background: #000000;"><!-- Connection Status - Top Right Corner -->
+   <div style="position: fixed; top: 16px; right: 16px; z-index: 1000;">
+    <div class="flex items-center gap-2 px-3 py-2 rounded-lg" style="background: rgba(26, 26, 26, 0.95); border: 1px solid #FFD700;">
+     <div id="connectionIndicator" class="w-2 h-2 rounded-full bg-gray-500"></div><span id="connectionStatus" class="text-sm" style="color: #FFD700;">جاري الاتصال...</span>
     </div>
    </div>
-  </main>
+   <div class="min-h-full py-8 px-4">
+    <div class="max-w-6xl mx-auto"><!-- Header -->
+     <div class="text-center mb-8"><img src="https://i.top4top.io/p_35860o72q1.png" alt="بحث الإطارات" class="mx-auto mb-4" style="max-width: 500px; width: 100%; height: auto;" onerror="this.style.display='none'; document.getElementById('fallbackTitle').style.display='block';">
+      <div id="fallbackTitle" style="display: none;">
+       <h1 class="text-4xl font-bold mb-2" style="color: #FFD700;">بحث الإطارات</h1>
+       <p style="color: #FFD700;">ابحث عن الإطار المناسب حسب المقاس</p>
+      </div>
+     </div><!-- Search Box -->
+     <div class="rounded-lg shadow-2xl p-6 mb-8 border-2 relative" style="background: #1a1a1a; border-color: #FFD700;">
+      <div class="flex gap-4 relative">
+       <div class="flex-1 relative"><input type="text" id="searchInput" placeholder="أدخل مقاس الإطار (مثال: 215/55R17)" class="w-full px-4 py-3 rounded-lg text-lg border-2 focus:outline-none" style="background-color: #000000; color: #FFD700; border-color: #FFD700;" autocomplete="off">
+        <div id="suggestionsDropdown" class="suggestions-dropdown hidden"></div>
+       </div><button id="searchButton" class="px-8 py-3 rounded-lg font-bold text-black text-lg hover:opacity-90 transition-opacity" style="background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);"> بحث </button>
+      </div>
+      <div id="loadingIndicator" class="hidden mt-4 flex justify-center">
+       <div class="loader"></div>
+      </div>
+      <div id="errorMessage" class="hidden mt-4 p-4 bg-red-900 text-white rounded-lg"></div>
+     </div><!-- Brand Filter -->
+     <div id="brandFilterContainer" class="hidden mb-6">
+      <div class="rounded-lg shadow-xl border" style="background: #1a1a1a; border-color: #FFD700;">
+       <div class="filter-toggle p-4 flex items-center justify-between" id="filterToggle"><span class="font-bold" style="color: #FFD700;">الماركة</span> <span class="arrow" style="color: #FFD700;">▼</span>
+       </div>
+       <div id="filterContent" class="hidden p-4 pt-0">
+        <div id="brandCheckboxes" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2" style="max-height: 200px; overflow-y: auto;"><!-- Checkboxes will be inserted here -->
+        </div>
+       </div>
+      </div>
+     </div><!-- Results -->
+     <div id="resultsContainer" class="hidden">
+      <div class="rounded-lg shadow-2xl overflow-hidden border-2" style="background: #1a1a1a; border-color: #FFD700;">
+       <div class="p-4" style="background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);">
+        <h2 class="text-2xl font-bold text-black">النتائج</h2>
+        <p id="resultsCount" class="text-black mt-1"></p>
+       </div>
+       <div class="overflow-x-auto">
+        <table class="w-full">
+         <thead>
+          <tr style="background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%); color: #FFD700;">
+           <th class="px-4 py-3 text-right border-b" style="border-color: #333;">الماركة</th>
+           <th class="px-4 py-3 text-right border-b" style="border-color: #333;">المقاس</th>
+           <th class="px-4 py-3 text-right border-b" style="border-color: #333;">النقشة</th>
+           <th class="px-4 py-3 text-right border-b" style="border-color: #333;">بلد الصنع</th>
+           <th class="px-4 py-3 text-right border-b" style="border-color: #333;">سنة الصنع</th>
+           <th class="px-4 py-3 text-right border-b" style="border-color: #333;">السعر (د.ك)</th>
+           <th class="px-4 py-3 text-center border-b" style="border-color: #333;">نسخ</th>
+          </tr>
+         </thead>
+         <tbody id="resultsTableBody" style="color: #FFD700;"><!-- Results will be inserted here -->
+         </tbody>
+        </table>
+       </div>
+      </div>
+     </div><!-- No Results -->
+     <div id="noResults" class="hidden rounded-lg shadow-2xl p-8 text-center border-2" style="background: #1a1a1a; border-color: #FFD700;">
+      <p class="text-xl" style="color: #FFD700;">لا توجد نتائج لهذا المقاس</p>
+     </div>
+    </div>
+   </div>
+  </div>
   <script>
-    const defaultConfig = {
-      login_title: "مرحباً بك",
-      login_subtitle: "سجل دخولك للمتابعة",
-      username_label: "اسم المستخدم",
-      password_label: "كلمة المرور",
-      login_button: "دخول",
-      button_tires_increase: "زيادات التواير",
-      button_tires_sheet: "تواير الشيت",
-      button_battery: "البطاريات",
-      button_oils: "الزيت والفلتر",
-      logout_button: "تسجيل الخروج",
-      background_color: "#000000",
-      text_color: "#ffffff",
-      accent_color: "#DAA520",
-      font_family: "Segoe UI",
-      font_size: 16
-    };
+        // جدول تحويل أسماء الماركات من الإنجليزي إلى العربي
+        const brandTranslations = {
+            'MICHELIN': 'ميشلان',
+            'BRIDGESTONE': 'بريدجستون',
+            'GOODYEAR': 'جوديير',
+            'CONTINENTAL': 'كونتيننتال',
+            'PIRELLI': 'بيريللي',
+            'DUNLOP': 'دنلوب',
+            'YOKOHAMA': 'يوكوهاما',
+            'YOKOHAMA AI TERRA TIRE': 'يوكوهاما حجري(جميع التضاريس)',
+            'AI TERRA TIRE': 'يوكوهاما حجري(جميع التضاريس)',
+            'HANKOOK': 'هانكوك',
+            'KUMHO': 'كومهو',
+            'TOYO': 'تويو',
+            'FALKEN': 'فالكن',
+            'NEXEN': 'نيكسن',
+            'MAXXIS': 'ماكسس',
+            'BFGOODRICH': 'بي إف جودريتش',
+            'COOPER': 'كوبر',
+            'MAYRUN': 'مايرن',
+            'ZETUM': 'زيتوم',
+            'APOLLO': 'أبولو',
+            'KINFOREST': 'كينفوريست',
+            'ROADSTONE': 'رودستون',
+            'SUMITOMO': 'سوميتومو',
+            'FIRESTONE': 'فايرستون',
+            'ULTRAFORCE': 'ألترا فورس'
+        };
 
-    let config = { ...defaultConfig };
-
-    // Create floating particles
-    const particlesContainer = document.getElementById('particles');
-    for (let i = 0; i < 30; i++) {
-      const particle = document.createElement('div');
-      particle.className = 'particle';
-      particle.style.left = Math.random() * 100 + '%';
-      particle.style.animationDelay = Math.random() * 15 + 's';
-      particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
-      particlesContainer.appendChild(particle);
-    }
-
-    // قائمة المستخدمين وكلمات المرور
-    const users = {
-      'Abdullah': 'portarage1',
-      'Suaad': 'portarage2',
-      'Laila': 'portarage3',
-      'Nasser': 'portarage4',
-      'Khalifa': 'portarage11',
-      'Azam': 'portarage6',
-      'Abdulwahab': 'portarage7',
-      'Bashar': 'portarage8',
-      'Ali': 'portarage9',
-      'Sabah': 'portarage10',
-      'Hamad': 'portarage12',
-      'Fawzi': 'portarage12',
-      'Mohamad': 'portarage7896',
-      'Salem': 'portarage7887'
-    };
-
-    const loginForm = document.getElementById('loginForm');
-    const loginContainer = document.getElementById('loginContainer');
-    const dashboard = document.getElementById('dashboard');
-    const errorMessage = document.getElementById('errorMessage');
-    const logoutButton = document.getElementById('logoutButton');
-    const buttonPanel = document.getElementById('buttonPanel');
-    const tiresIncreaseBtn = document.getElementById('tiresIncreaseBtn');
-    const tiresSheetBtn = document.getElementById('tiresSheetBtn');
-    const batteryBtn = document.getElementById('batteryBtn');
-    const oilsBtn = document.getElementById('oilsBtn');
-    const hoverTrigger = document.getElementById('hoverTrigger');
-    const dashboardHeader = document.getElementById('dashboardHeader');
-    const welcomeScreen = document.getElementById('welcomeScreen');
-    const tiresIncreaseFrame = document.getElementById('tiresIncreaseFrame');
-    const tiresSheetFrame = document.getElementById('tiresSheetFrame');
-    const batteryFrame = document.getElementById('batteryFrame');
-    const oilsFrame = document.getElementById('oilsFrame');
-
-    let currentFrame = null;
-    let titleAnimationComplete = false;
-
-    // Title animation function
-    function animateTitle() {
-      const titleElement = document.getElementById('welcomeTitle');
-      if (!titleElement) return;
-      
-      titleElement.innerHTML = '';
-      titleElement.style.display = 'none';
-      titleAnimationComplete = true;
-    }
-
-    // Physics engine variables
-    const objects = [];
-    const gravity = 0;
-    const friction = 0.995;
-    const bounciness = 0.9;
-    let isDragging = false;
-    let draggedObject = null;
-    let mouseX = 0;
-    let mouseY = 0;
-    let lastMouseX = 0;
-    let lastMouseY = 0;
-
-    // SVG templates
-    const tireSVG = `<svg class="tire-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <radialGradient id="tireGrad" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" style="stop-color:#1a1a1a;stop-opacity:1" />
-          <stop offset="70%" style="stop-color:#000000;stop-opacity:1" />
-        </radialGradient>
-        <radialGradient id="rimGrad" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
-          <stop offset="100%" style="stop-color:#DAA520;stop-opacity:1" />
-        </radialGradient>
-      </defs>
-      <circle cx="50" cy="50" r="45" fill="url(#tireGrad)" stroke="#333" stroke-width="2"/>
-      <circle cx="50" cy="50" r="30" fill="url(#rimGrad)" stroke="#B8860B" stroke-width="2"/>
-      <circle cx="50" cy="50" r="15" fill="#1a1a1a" stroke="#DAA520" stroke-width="1"/>
-      <path d="M 50 20 L 50 35 M 80 50 L 65 50 M 50 80 L 50 65 M 20 50 L 35 50" stroke="#B8860B" stroke-width="3" stroke-linecap="round"/>
-    </svg>`;
-
-    const batterySVG = `<svg class="battery-svg" viewBox="0 0 70 90" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="batteryGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
-          <stop offset="100%" style="stop-color:#DAA520;stop-opacity:1" />
-        </linearGradient>
-      </defs>
-      <rect x="15" y="5" width="10" height="5" fill="#FFD700" rx="2"/>
-      <rect x="45" y="5" width="10" height="5" fill="#FFD700" rx="2"/>
-      <rect x="5" y="10" width="60" height="70" fill="url(#batteryGrad)" stroke="#B8860B" stroke-width="2" rx="5"/>
-      <rect x="15" y="25" width="40" height="8" fill="#000000" opacity="0.3" rx="2"/>
-      <rect x="15" y="40" width="40" height="8" fill="#000000" opacity="0.3" rx="2"/>
-      <rect x="15" y="55" width="40" height="8" fill="#000000" opacity="0.3" rx="2"/>
-      <text x="35" y="48" font-size="16" font-weight="bold" fill="#000000" text-anchor="middle">+</text>
-    </svg>`;
-
-    const oilSVG = `<svg class="oil-svg" viewBox="0 0 60 100" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="oilGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" style="stop-color:#DAA520;stop-opacity:1" />
-          <stop offset="50%" style="stop-color:#B8860B;stop-opacity:1" />
-          <stop offset="100%" style="stop-color:#8B6914;stop-opacity:1" />
-        </linearGradient>
-      </defs>
-      <rect x="15" y="5" width="30" height="10" fill="#1a1a1a" stroke="#DAA520" stroke-width="1" rx="2"/>
-      <path d="M 20 15 L 15 25 L 15 85 Q 15 95 25 95 L 35 95 Q 45 95 45 85 L 45 25 L 40 15 Z" 
-            fill="url(#oilGrad)" stroke="#B8860B" stroke-width="2"/>
-      <ellipse cx="30" cy="50" rx="8" ry="15" fill="#FFD700" opacity="0.3"/>
-      <rect x="20" y="40" width="20" height="3" fill="#000000" opacity="0.4" rx="1"/>
-      <rect x="20" y="55" width="20" height="3" fill="#000000" opacity="0.4" rx="1"/>
-      <path d="M 25 70 Q 30 75 35 70" stroke="#000000" stroke-width="2" fill="none" opacity="0.3"/>
-    </svg>`;
-
-    const dropSVG = `<svg width="40" height="50" viewBox="0 0 40 50" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <radialGradient id="dropGrad" cx="40%" cy="30%">
-          <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
-          <stop offset="50%" style="stop-color:#DAA520;stop-opacity:1" />
-          <stop offset="100%" style="stop-color:#B8860B;stop-opacity:1" />
-        </radialGradient>
-      </defs>
-      <path d="M 20 5 Q 15 15, 10 25 Q 5 35, 10 42 Q 15 48, 20 48 Q 25 48, 30 42 Q 35 35, 30 25 Q 25 15, 20 5 Z" 
-            fill="url(#dropGrad)" stroke="#B8860B" stroke-width="1"/>
-      <ellipse cx="16" cy="20" rx="4" ry="6" fill="#FFD700" opacity="0.4"/>
-    </svg>`;
-
-    class PhysicsObject {
-      constructor(x, y, type, svg) {
-        this.x = x;
-        this.y = y;
-        this.vx = (Math.random() - 0.5) * 2;
-        this.vy = (Math.random() - 0.5) * 2;
-        this.type = type;
-        this.rotation = Math.random() * 360;
-        this.rotationSpeed = (Math.random() - 0.5) * 2;
-        this.mass = type === 'battery' ? 1.2 : (type === 'tire' ? 1 : (type === 'drop' ? 0.5 : 0.8));
-        
-        this.element = document.createElement('div');
-        this.element.className = 'physics-object';
-        this.element.innerHTML = svg;
-        this.element.style.left = x + 'px';
-        this.element.style.top = y + 'px';
-        this.element.style.transform = `rotate(${this.rotation}deg)`;
-        
-        const sizes = {
-          tire: { width: 80, height: 80 },
-          battery: { width: 70, height: 90 },
-          oil: { width: 60, height: 100 },
-          drop: { width: 40, height: 50 }
+        // جدول تحويل الدول من الإنجليزي إلى العربي
+        const countryTranslations = {
+            'CHINA': 'صيني 🇨🇳',
+            'THAILAND': 'تايلندي 🇹🇭',
+            'JAPAN': 'ياباني 🇯🇵',
+            'POLAND': 'بولندي 🇵🇱',
+            'EUROPE': 'أوروبي 🇪🇺',
+            'FRANCE': 'فرنسي 🇫🇷',
+            'SOUTH KOREA': 'كوري 🇰🇷',
+            'KOREA': 'كوري 🇰🇷',
+            'UNITED STATES': 'أمريكي 🇺🇸',
+            'USA': 'أمريكي 🇺🇸',
+            'PHILIPPINES': 'فلبيني 🇵🇭',
+            'INDONESIA': 'اندونيسي 🇮🇩',
+            'INDIA': 'هندي 🇮🇳',
+            'GERMANY': 'ألماني 🇩🇪',
+            'SOUTH AFRICA': 'جنوب أفريقيا 🇿🇦',
+            'CANADA': 'كندي 🇨🇦',
+            'MALAYSIA': 'ماليزي 🇲🇾',
+            'VIETNAM': 'فيتنامي 🇻🇳',
+            'TAIWAN': 'تايواني 🇹🇼',
+            'BRAZIL': 'برازيلي 🇧🇷',
+            'ITALY': 'إيطالي 🇮🇹',
+            'SPAIN': 'إسباني 🇪🇸',
+            'TURKEY': 'تركي 🇹🇷',
+            'MEXICO': 'مكسيكي 🇲🇽',
+            'UK': 'بريطاني 🇬🇧',
+            'UNITED KINGDOM': 'بريطاني 🇬🇧',
+            'RUSSIA': 'روسي 🇷🇺',
+            'CZECH REPUBLIC': 'تشيكي 🇨🇿',
+            'SLOVAKIA': 'سلوفاكي 🇸🇰',
+            'HUNGARY': 'مجري 🇭🇺',
+            'ROMANIA': 'روماني 🇷🇴',
+            'ARGENTINA': 'أرجنتيني 🇦🇷',
+            'AUSTRALIA': 'أسترالي 🇦🇺',
+            'NEW ZEALAND': 'نيوزيلندي 🇳🇿',
+            'SERBIA': 'صربي 🇷🇸',
+            'PORTUGAL': 'برتغالي 🇵🇹',
+            'SLOVENIA': 'سلوفيني 🇸🇮'
         };
         
-        this.width = sizes[type].width;
-        this.height = sizes[type].height;
+        // قائمة الدول المتاحة للاختيار
+        const availableCountries = [
+            'صيني 🇨🇳',
+            'تايلندي 🇹🇭',
+            'ياباني 🇯🇵',
+            'بولندي 🇵🇱',
+            'أوروبي 🇪🇺',
+            'فرنسي 🇫🇷',
+            'كوري 🇰🇷',
+            'أمريكي 🇺🇸',
+            'فلبيني 🇵🇭',
+            'اندونيسي 🇮🇩',
+            'هندي 🇮🇳',
+            'ألماني 🇩🇪',
+            'جنوب أفريقيا 🇿🇦',
+            'كندي 🇨🇦',
+            'ماليزي 🇲🇾',
+            'فيتنامي 🇻🇳',
+            'تايواني 🇹🇼',
+            'برازيلي 🇧🇷',
+            'إيطالي 🇮🇹',
+            'إسباني 🇪🇸',
+            'تركي 🇹🇷',
+            'مكسيكي 🇲🇽',
+            'بريطاني 🇬🇧',
+            'روسي 🇷🇺',
+            'تشيكي 🇨🇿',
+            'سلوفاكي 🇸🇰',
+            'مجري 🇭🇺',
+            'روماني 🇷🇴',
+            'أرجنتيني 🇦🇷',
+            'أسترالي 🇦🇺',
+            'نيوزيلندي 🇳🇿',
+            'صربي 🇷🇸',
+            'برتغالي 🇵🇹',
+            'سلوفيني 🇸🇮'
+        ];
         
-        const self = this;
-        this.element.addEventListener('mousedown', function(e) {
-          e.preventDefault();
-          isDragging = true;
-          draggedObject = self;
-          self.vx = 0;
-          self.vy = 0;
-          lastMouseX = e.clientX;
-          lastMouseY = e.clientY;
-        });
-      }
-      
-      update(containerWidth, containerHeight) {
-        if (draggedObject !== this) {
-          this.vy += gravity;
-          this.vx *= friction;
-          this.vy *= friction;
-          
-          this.x += this.vx;
-          this.y += this.vy;
-          this.rotation += this.rotationSpeed;
-          
-          if (this.x <= 0) {
-            this.x = 0;
-            this.vx = Math.abs(this.vx) * bounciness;
-            this.rotationSpeed = -this.rotationSpeed * 0.8;
-          }
-          if (this.x + this.width >= containerWidth) {
-            this.x = containerWidth - this.width;
-            this.vx = -Math.abs(this.vx) * bounciness;
-            this.rotationSpeed = -this.rotationSpeed * 0.8;
-          }
-          if (this.y <= 0) {
-            this.y = 0;
-            this.vy = Math.abs(this.vy) * bounciness;
-            this.rotationSpeed = -this.rotationSpeed * 0.8;
-          }
-          if (this.y + this.height >= containerHeight) {
-            this.y = containerHeight - this.height;
-            this.vy = -Math.abs(this.vy) * bounciness;
-            this.rotationSpeed *= 0.8;
-            if (Math.abs(this.vy) < 0.5) this.vy = 0;
-          }
+        // قائمة السنوات المتاحة
+        const availableYears = ['2024', '2025', '2026'];
+
+        // معرف الملف وأسماء التبويبات
+        const SHEET_ID = '1_ml2uiVRXrltZ4ef1PKSgNSO_4SMtXKn20JSajVEDu8';
+        const SHEET_TABS = [
+            'Berlin Tires',
+            'FTC',
+            'Babtain Tires',
+            'YOKOHAMA TIRE',
+            'Al TERRA TIRE (By YOKOHAMA)',
+            'MICHELIN , BFGOODRICH',
+            'AL Ghanim Group China',
+            'AL Ghanim Group Korea',
+            'AL Ghanim Group SUMITOMO',
+            'Pirelli Retail price list',
+            'Firestone Tires',
+            'UltraForce Tires',
+            'فرج حولي'
+        ];
+        
+        let allData = [];
+        let allSizes = new Set();
+        let currentSearchResults = [];
+
+        const defaultConfig = {
+            site_title: 'بحث الإطارات',
+            search_placeholder: 'أدخل مقاس الإطار (مثال: 215/55R17)',
+            search_button_text: 'بحث',
+            copy_button_text: 'نسخ'
+        };
+
+        async function onConfigChange(config) {
+            document.getElementById('searchInput').placeholder = config.search_placeholder || defaultConfig.search_placeholder;
+            document.getElementById('searchButton').textContent = config.search_button_text || defaultConfig.search_button_text;
         }
-        
-        this.element.style.left = this.x + 'px';
-        this.element.style.top = this.y + 'px';
-        this.element.style.transform = `rotate(${this.rotation}deg)`;
-      }
-      
-      checkCollision(other) {
-        const dx = (this.x + this.width / 2) - (other.x + other.width / 2);
-        const dy = (this.y + this.height / 2) - (other.y + other.height / 2);
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        const minDistance = (this.width + other.width) / 3;
-        
-        if (distance < minDistance) {
-          const angle = Math.atan2(dy, dx);
-          const totalMass = this.mass + other.mass;
-          const overlap = minDistance - distance;
-          
-          this.x += Math.cos(angle) * overlap * (other.mass / totalMass);
-          this.y += Math.sin(angle) * overlap * (other.mass / totalMass);
-          other.x -= Math.cos(angle) * overlap * (this.mass / totalMass);
-          other.y -= Math.sin(angle) * overlap * (this.mass / totalMass);
-          
-          const relativeVx = this.vx - other.vx;
-          const relativeVy = this.vy - other.vy;
-          const speed = Math.sqrt(relativeVx * relativeVx + relativeVy * relativeVy);
-          
-          const newVx1 = ((this.mass - other.mass) * this.vx + 2 * other.mass * other.vx) / totalMass;
-          const newVy1 = ((this.mass - other.mass) * this.vy + 2 * other.mass * other.vy) / totalMass;
-          const newVx2 = ((other.mass - this.mass) * other.vx + 2 * this.mass * this.vx) / totalMass;
-          const newVy2 = ((other.mass - this.mass) * other.vy + 2 * this.mass * this.vy) / totalMass;
-          
-          this.vx = newVx1 * bounciness;
-          this.vy = newVy1 * bounciness;
-          other.vx = newVx2 * bounciness;
-          other.vy = newVy2 * bounciness;
-          
-          this.rotationSpeed = (Math.random() - 0.5) * speed;
-          other.rotationSpeed = (Math.random() - 0.5) * speed;
-        }
-      }
-    }
 
-    function initPhysicsObjects() {
-      const container = document.getElementById('floatingShapes');
-      if (!container) return;
-      
-      container.innerHTML = '';
-      objects.length = 0;
-      
-      const containerRect = container.getBoundingClientRect();
-      
-      const types = [
-        { type: 'tire', svg: tireSVG },
-        { type: 'drop', svg: dropSVG },
-        { type: 'battery', svg: batterySVG },
-        { type: 'oil', svg: oilSVG },
-        { type: 'tire', svg: tireSVG },
-        { type: 'drop', svg: dropSVG },
-        { type: 'battery', svg: batterySVG },
-        { type: 'oil', svg: oilSVG },
-        { type: 'tire', svg: tireSVG },
-        { type: 'drop', svg: dropSVG },
-        { type: 'battery', svg: batterySVG },
-        { type: 'oil', svg: oilSVG },
-        { type: 'tire', svg: tireSVG },
-        { type: 'drop', svg: dropSVG },
-        { type: 'battery', svg: batterySVG },
-        { type: 'oil', svg: oilSVG },
-        { type: 'tire', svg: tireSVG },
-        { type: 'drop', svg: dropSVG },
-        { type: 'battery', svg: batterySVG },
-        { type: 'oil', svg: oilSVG },
-        { type: 'tire', svg: tireSVG },
-        { type: 'drop', svg: dropSVG },
-        { type: 'battery', svg: batterySVG },
-        { type: 'oil', svg: oilSVG }
-      ];
-      
-      const cols = 6;
-      const rows = 4;
-      const marginX = containerRect.width * 0.1;
-      const marginY = containerRect.height * 0.1;
-      const cellWidth = (containerRect.width - marginX * 2) / cols;
-      const cellHeight = (containerRect.height - marginY * 2) / rows;
-      
-      types.forEach((item, index) => {
-        const row = Math.floor(index / cols);
-        const col = index % cols;
-        const x = marginX + col * cellWidth + cellWidth / 2 - 40 + (Math.random() - 0.5) * 30;
-        const y = marginY + row * cellHeight + cellHeight / 2 - 40 + (Math.random() - 0.5) * 30;
-        const obj = new PhysicsObject(x, y, item.type, item.svg);
-        objects.push(obj);
-        container.appendChild(obj.element);
-      });
-    }
-
-    function animate() {
-      const container = document.getElementById('floatingShapes');
-      if (!container || !dashboard.classList.contains('active')) {
-        requestAnimationFrame(animate);
-        return;
-      }
-      
-      const containerRect = container.getBoundingClientRect();
-      
-      objects.forEach(obj => {
-        obj.update(containerRect.width, containerRect.height);
-      });
-      
-      for (let i = 0; i < objects.length; i++) {
-        for (let j = i + 1; j < objects.length; j++) {
-          objects[i].checkCollision(objects[j]);
-        }
-      }
-      
-      requestAnimationFrame(animate);
-    }
-
-    document.addEventListener('mousemove', function(e) {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-      
-      if (isDragging && draggedObject) {
-        const container = document.getElementById('floatingShapes');
-        const rect = container.getBoundingClientRect();
-        draggedObject.x = e.clientX - rect.left - draggedObject.width / 2;
-        draggedObject.y = e.clientY - rect.top - draggedObject.height / 2;
-        
-        draggedObject.vx = (e.clientX - lastMouseX) * 0.5;
-        draggedObject.vy = (e.clientY - lastMouseY) * 0.5;
-        
-        lastMouseX = e.clientX;
-        lastMouseY = e.clientY;
-      }
-    });
-
-    document.addEventListener('mouseup', function() {
-      if (isDragging && draggedObject) {
-        draggedObject.rotationSpeed = (Math.random() - 0.5) * 10;
-      }
-      isDragging = false;
-      draggedObject = null;
-    });
-
-    const pageUrls = {
-      tiresIncrease: 'https://portaragetiers.netlify.app/',
-      tiresSheet: 'https://portaragestiers.netlify.app/',
-      battery: 'https://portaragebatteries.netlify.app/',
-      oils: 'https://portarageoils.netlify.app/'
-    };
-
-    let hideMenuTimeout = null;
-
-    function loadPage(iframe, url) {
-      welcomeScreen.style.display = 'none';
-      
-      const allFrames = [tiresIncreaseFrame, tiresSheetFrame, batteryFrame, oilsFrame];
-      allFrames.forEach(frame => frame.classList.remove('active'));
-      
-      iframe.classList.add('active');
-      
-      if (!iframe.src || iframe.src === '') {
-        iframe.src = url;
-      }
-      
-      currentFrame = iframe;
-      
-      if (hideMenuTimeout) {
-        clearTimeout(hideMenuTimeout);
-      }
-      hideMenuTimeout = setTimeout(function() {
-        dashboardHeader.classList.remove('visible');
-        buttonPanel.classList.remove('visible');
-      }, 5000);
-    }
-
-    function showWelcome() {
-      const allFrames = [tiresIncreaseFrame, tiresSheetFrame, batteryFrame, oilsFrame];
-      allFrames.forEach(frame => frame.classList.remove('active'));
-      
-      welcomeScreen.style.display = 'flex';
-      currentFrame = null;
-    }
-
-    hoverTrigger.addEventListener('mouseenter', function() {
-      dashboardHeader.classList.add('visible');
-      buttonPanel.classList.add('visible');
-    });
-
-    hoverTrigger.addEventListener('mouseleave', function() {
-      setTimeout(function() {
-        if (!dashboardHeader.matches(':hover') && !buttonPanel.matches(':hover')) {
-          dashboardHeader.classList.remove('visible');
-          buttonPanel.classList.remove('visible');
-        }
-      }, 100);
-    });
-
-    dashboardHeader.addEventListener('mouseleave', function() {
-      setTimeout(function() {
-        if (!buttonPanel.matches(':hover') && !hoverTrigger.matches(':hover')) {
-          dashboardHeader.classList.remove('visible');
-          buttonPanel.classList.remove('visible');
-        }
-      }, 100);
-    });
-
-    buttonPanel.addEventListener('mouseleave', function() {
-      setTimeout(function() {
-        if (!dashboardHeader.matches(':hover') && !hoverTrigger.matches(':hover')) {
-          dashboardHeader.classList.remove('visible');
-          buttonPanel.classList.remove('visible');
-        }
-      }, 100);
-    });
-
-    const savedUsername = localStorage.getItem('savedUsername');
-    const savedPassword = localStorage.getItem('savedPassword');
-    if (savedUsername && savedPassword) {
-      document.getElementById('username').value = savedUsername;
-      document.getElementById('password').value = savedPassword;
-    }
-
-    if (sessionStorage.getItem('isLoggedIn') === 'true') {
-      loginContainer.classList.add('hide');
-      dashboard.classList.add('active');
-      setTimeout(() => {
-        initPhysicsObjects();
-        animateTitle();
-      }, 100);
-    }
-    
-    animate();
-
-    loginForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      const username = document.getElementById('username').value;
-      const password = document.getElementById('password').value;
-
-      if (users[username] && users[username] === password) {
-        errorMessage.classList.remove('show');
-        sessionStorage.setItem('isLoggedIn', 'true');
-        
-        localStorage.setItem('savedUsername', username);
-        localStorage.setItem('savedPassword', password);
-        
-        const welcomeMessage = document.createElement('div');
-        welcomeMessage.style.cssText = `
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background: rgba(0, 0, 0, 0.95);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 9999;
-          animation: fadeIn 0.5s ease;
-        `;
-        
-        const welcomeContent = document.createElement('div');
-        welcomeContent.style.cssText = `
-          text-align: center;
-          animation: scaleIn 0.8s ease;
-        `;
-        
-        welcomeContent.innerHTML = `
-          <h1 style="font-size: 48px; font-weight: bold; background: linear-gradient(135deg, #FFD700 0%, #DAA520 50%, #B8860B 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 20px;">
-            مرحباً ${username}! 👋
-          </h1>
-          <p style="font-size: 24px; background: linear-gradient(135deg, #FFD700 0%, #DAA520 50%, #B8860B 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin: 0;">
-            نتمنى لك تجربة ممتعة
-          </p>
-        `;
-        
-        welcomeMessage.appendChild(welcomeContent);
-        document.body.appendChild(welcomeMessage);
-        
-        const style = document.createElement('style');
-        style.textContent = `
-          @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-          }
-          @keyframes scaleIn {
-            from { transform: scale(0.5); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-          }
-        `;
-        document.head.appendChild(style);
-        
-        setTimeout(() => {
-          welcomeMessage.style.animation = 'fadeOut 0.5s ease';
-          welcomeMessage.style.opacity = '0';
-          
-          const fadeOutStyle = document.createElement('style');
-          fadeOutStyle.textContent = `
-            @keyframes fadeOut {
-              from { opacity: 1; }
-              to { opacity: 0; }
+        function extractTireSize(sizeText) {
+            if (!sizeText) return null;
+            const cleanText = sizeText.trim();
+            
+            // المقاسات العادية (مثل 215/60R16 أو LT265/65R17)
+            const normalMatch = cleanText.replace(/\s+/g, '').match(/(LT)?\d{3}\/\d{2}[A-Z\-]*\d{2}/i);
+            if (normalMatch) {
+                const normalized = normalMatch[0].replace(/([\/\d{2}])[A-Z\-]+(\d{2})/i, '$1R$2');
+                return normalized.toUpperCase();
             }
-          `;
-          document.head.appendChild(fadeOutStyle);
-          
-          setTimeout(() => {
-            welcomeMessage.remove();
-            loginContainer.classList.add('hide');
-            dashboard.classList.add('active');
+            
+            // دعم المقاسات الخاصة مثل 16.9-28 12PR AIT 426
+            const specialMatch = cleanText.match(/\d+\.?\d*[\-\/]\d+/);
+            if (specialMatch) {
+                return cleanText.toUpperCase();
+            }
+            
+            return null;
+        }
+
+        function isRunFlat(text) {
+            if (!text) return false;
+            const upperText = text.toUpperCase().replace(/\s+/g, '');
+            return upperText.includes('RF') || 
+                   upperText.includes('R-F') ||
+                   upperText.includes('RFT') || 
+                   upperText.includes('RUNFLAT') || 
+                   upperText.includes('RUNFLAT');
+        }
+
+        function extractPattern(sizeText, patternColumn) {
+            let pattern = '';
+            
+            // إذا كانت خانة النقشة موجودة، استخدمها
+            if (patternColumn && patternColumn.trim()) {
+                pattern = patternColumn.trim();
+            } 
+            // إذا لم تكن موجودة، استخرج النقشة من نص المقاس (بعد المقاس نفسه)
+            else if (sizeText) {
+                // إزالة المقاس الأساسي والحصول على ما بعده
+                const sizeMatch = sizeText.match(/(LT)?\d{3}\/\d{2}[A-Z\-]*\d{2}/i);
+                if (sizeMatch) {
+                    // الحصول على النص بعد المقاس
+                    const afterSize = sizeText.substring(sizeMatch.index + sizeMatch[0].length).trim();
+                    // إزالة TL وأي فراغات زائدة
+                    pattern = afterSize.replace(/TL/gi, '').replace(/\s+/g, ' ').trim();
+                } else {
+                    // للمقاسات الخاصة، حاول استخراج أي نص إضافي
+                    const parts = sizeText.split(' ');
+                    if (parts.length > 1) {
+                        pattern = parts.slice(1).join(' ').replace(/TL/gi, '').trim();
+                    }
+                }
+            }
+            
+            // إضافة إشارة رن فلات إذا كان موجوداً
+            if (isRunFlat(sizeText) || isRunFlat(patternColumn)) {
+                pattern = pattern ? `${pattern} (رن فلات)` : '(رن فلات)';
+            }
+            
+            return pattern;
+        }
+
+        function translateBrand(brand) {
+            if (!brand) return '';
+            const upperBrand = brand.toUpperCase();
+            return brandTranslations[upperBrand] || brand;
+        }
+
+        function translateCountry(origin) {
+            if (!origin) return '';
+            const upperOrigin = origin.toUpperCase().trim();
+            return countryTranslations[upperOrigin] || origin;
+        }
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
             setTimeout(() => {
-              initPhysicsObjects();
-              animateTitle();
-            }, 100);
-          }, 500);
-        }, 6000);
-      } else {
-        errorMessage.classList.add('show');
-      }
-    });
-
-    logoutButton.addEventListener('click', function() {
-      sessionStorage.removeItem('isLoggedIn');
-      dashboard.classList.remove('active');
-      loginContainer.classList.remove('hide');
-      document.getElementById('username').value = '';
-      document.getElementById('password').value = '';
-      errorMessage.classList.remove('show');
-      
-      dashboardHeader.classList.remove('visible');
-      buttonPanel.classList.remove('visible');
-      
-      showWelcome();
-      
-      tiresIncreaseFrame.src = '';
-      tiresSheetFrame.src = '';
-      batteryFrame.src = '';
-      oilsFrame.src = '';
-    });
-
-    tiresIncreaseBtn.addEventListener('click', function() {
-      loadPage(tiresIncreaseFrame, pageUrls.tiresIncrease);
-    });
-
-    tiresSheetBtn.addEventListener('click', function() {
-      loadPage(tiresSheetFrame, pageUrls.tiresSheet);
-    });
-
-    batteryBtn.addEventListener('click', function() {
-      loadPage(batteryFrame, pageUrls.battery);
-    });
-
-    oilsBtn.addEventListener('click', function() {
-      loadPage(oilsFrame, pageUrls.oils);
-    });
-
-    async function onConfigChange(newConfig) {
-      const customFont = newConfig.font_family || defaultConfig.font_family;
-      const baseFontSize = newConfig.font_size || defaultConfig.font_size;
-      const backgroundColor = newConfig.background_color || defaultConfig.background_color;
-      const textColor = newConfig.text_color || defaultConfig.text_color;
-      const accentColor = newConfig.accent_color || defaultConfig.accent_color;
-
-      document.body.style.fontFamily = `${customFont}, Arial, sans-serif`;
-      document.body.style.fontSize = `${baseFontSize}px`;
-      document.body.style.background = backgroundColor;
-      document.body.style.color = textColor;
-
-      document.getElementById('loginTitle').textContent = newConfig.login_title || defaultConfig.login_title;
-      document.getElementById('loginSubtitle').textContent = newConfig.login_subtitle || defaultConfig.login_subtitle;
-      document.getElementById('usernameLabel').textContent = newConfig.username_label || defaultConfig.username_label;
-      document.getElementById('passwordLabel').textContent = newConfig.password_label || defaultConfig.password_label;
-      document.getElementById('loginButton').textContent = newConfig.login_button || defaultConfig.login_button;
-      document.getElementById('logoutButton').textContent = newConfig.logout_button || defaultConfig.logout_button;
-      document.getElementById('tiresIncreaseBtn').textContent = newConfig.button_tires_increase || defaultConfig.button_tires_increase;
-      document.getElementById('tiresSheetBtn').textContent = newConfig.button_tires_sheet || defaultConfig.button_tires_sheet;
-      document.getElementById('batteryBtn').textContent = newConfig.button_battery || defaultConfig.button_battery;
-      document.getElementById('oilsBtn').textContent = newConfig.button_oils || defaultConfig.button_oils;
-
-      document.querySelector('.login-title').style.fontSize = `${baseFontSize * 1.5}px`;
-      document.querySelector('.login-subtitle').style.fontSize = `${baseFontSize * 0.875}px`;
-      document.querySelector('.login-subtitle').style.color = textColor;
-
-      const formLabels = document.querySelectorAll('.form-label');
-      formLabels.forEach(label => {
-        label.style.fontSize = `${baseFontSize * 0.8125}px`;
-        label.style.color = accentColor;
-      });
-
-      const formInputs = document.querySelectorAll('.form-input');
-      formInputs.forEach(input => {
-        input.style.fontSize = `${baseFontSize * 0.875}px`;
-        input.style.color = textColor;
-      });
-
-      const loginBtn = document.querySelector('.login-button');
-      loginBtn.style.fontSize = `${baseFontSize}px`;
-
-      const navButtons = document.querySelectorAll('.nav-button');
-      navButtons.forEach(button => {
-        button.style.color = accentColor;
-      });
-
-      const logoutBtn = document.querySelector('.logout-button');
-      logoutBtn.style.fontSize = `${baseFontSize * 0.8125}px`;
-    }
-
-    function mapToCapabilities(config) {
-      return {
-        recolorables: [
-          {
-            get: () => config.background_color || defaultConfig.background_color,
-            set: (value) => {
-              config.background_color = value;
-              window.elementSdk.setConfig({ background_color: value });
-            }
-          },
-          {
-            get: () => config.text_color || defaultConfig.text_color,
-            set: (value) => {
-              config.text_color = value;
-              window.elementSdk.setConfig({ text_color: value });
-            }
-          },
-          {
-            get: () => config.accent_color || defaultConfig.accent_color,
-            set: (value) => {
-              config.accent_color = value;
-              window.elementSdk.setConfig({ accent_color: value });
-            }
-          }
-        ],
-        borderables: [],
-        fontEditable: {
-          get: () => config.font_family || defaultConfig.font_family,
-          set: (value) => {
-            config.font_family = value;
-            window.elementSdk.setConfig({ font_family: value });
-          }
-        },
-        fontSizeable: {
-          get: () => config.font_size || defaultConfig.font_size,
-          set: (value) => {
-            config.font_size = value;
-            window.elementSdk.setConfig({ font_size: value });
-          }
+                toast.remove();
+            }, 2000);
         }
-      };
-    }
 
-    function mapToEditPanelValues(config) {
-      return new Map([
-        ["login_title", config.login_title || defaultConfig.login_title],
-        ["login_subtitle", config.login_subtitle || defaultConfig.login_subtitle],
-        ["username_label", config.username_label || defaultConfig.username_label],
-        ["password_label", config.password_label || defaultConfig.password_label],
-        ["login_button", config.login_button || defaultConfig.login_button],
-        ["button_tires_increase", config.button_tires_increase || defaultConfig.button_tires_increase],
-        ["button_tires_sheet", config.button_tires_sheet || defaultConfig.button_tires_sheet],
-        ["button_battery", config.button_battery || defaultConfig.button_battery],
-        ["button_oils", config.button_oils || defaultConfig.button_oils],
-        ["logout_button", config.logout_button || defaultConfig.logout_button]
-      ]);
-    }
+        function copyToClipboard(text, button) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            document.body.appendChild(textArea);
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+                showToast('تم النسخ بنجاح!');
+                
+                const originalText = button.textContent;
+                button.textContent = '✓ تم النسخ';
+                button.style.background = '#10B981';
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)';
+                }, 1500);
+            } catch (err) {
+                showToast('فشل النسخ، حاول مرة أخرى');
+            }
+            
+            document.body.removeChild(textArea);
+        }
 
-    if (window.elementSdk) {
-      window.elementSdk.init({
-        defaultConfig,
-        onConfigChange,
-        mapToCapabilities,
-        mapToEditPanelValues
-      });
+        function showSuggestions(searchTerm) {
+            const dropdown = document.getElementById('suggestionsDropdown');
+            
+            if (!searchTerm || searchTerm.length < 2) {
+                dropdown.classList.add('hidden');
+                return;
+            }
+            
+            const normalizedSearch = searchTerm.replace(/\s+/g, '').toUpperCase();
+            const matches = Array.from(allSizes).filter(size => 
+                size.includes(normalizedSearch)
+            ).slice(0, 10);
+            
+            if (matches.length === 0) {
+                dropdown.classList.add('hidden');
+                return;
+            }
+            
+            dropdown.innerHTML = '';
+            matches.forEach(size => {
+                const item = document.createElement('div');
+                item.className = 'suggestion-item';
+                item.textContent = size;
+                item.addEventListener('click', () => {
+                    document.getElementById('searchInput').value = size;
+                    dropdown.classList.add('hidden');
+                    performSearch();
+                });
+                dropdown.appendChild(item);
+            });
+            
+            dropdown.classList.remove('hidden');
+        }
 
-      config = window.elementSdk.config;
-      onConfigChange(config);
-    }
-  </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b0d5c4ad5368308',t:'MTc2NjIxNTA1Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+        async function loadSheetTab(sheetId, tabName) {
+            try {
+                const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?sheet=${encodeURIComponent(tabName)}&tqx=out:json`;
+                
+                const response = await fetch(url);
+                const text = await response.text();
+                
+                const jsonMatch = text.match(/google\.visualization\.Query\.setResponse\((.*)\);/);
+                if (!jsonMatch) {
+                    return [];
+                }
+                
+                const data = JSON.parse(jsonMatch[1]);
+                const sheetData = [];
+                
+                if (data.table && data.table.rows) {
+                    for (let i = 0; i < data.table.rows.length; i++) {
+                        const row = data.table.rows[i];
+                        if (row.c && row.c.length >= 2) {
+                            const brand = row.c[0]?.v || row.c[0]?.f || '';
+                            const tireSize = row.c[1]?.v || row.c[1]?.f || '';
+                            const pattern = row.c[2]?.v || row.c[2]?.f || '';
+                            const year = row.c[3]?.v || row.c[3]?.f || '';
+                            const price = row.c[5]?.v || row.c[5]?.f || row.c[4]?.v || row.c[4]?.f || '';
+                            const origin = row.c[6]?.v || row.c[6]?.f || '';
+                            
+                            // تجاهل صف العناوين فقط
+                            if (brand && brand.toUpperCase() === 'BRAND') continue;
+                            
+                            const normalizedSize = extractTireSize(tireSize);
+                            
+                            // إضافة الصف إذا كان المقاس والسعر موجودين (حتى لو البراند فارغ)
+                            if (normalizedSize && price && price.toString().trim()) {
+                                allSizes.add(normalizedSize);
+                                sheetData.push({
+                                    brand: brand ? brand.toString().trim() : '',
+                                    tireSize: normalizedSize,
+                                    pattern: extractPattern(tireSize, pattern),
+                                    year: year ? year.toString().trim() : '',
+                                    price: price.toString().trim(),
+                                    origin: origin ? origin.toString().trim() : '',
+                                    sheetTab: tabName
+                                });
+                            }
+                        }
+                    }
+                }
+                
+                return sheetData;
+            } catch (error) {
+                console.error(`Error loading tab ${tabName}:`, error);
+                return [];
+            }
+        }
+
+        async function loadGoogleSheetsData() {
+            try {
+                allData = [];
+                allSizes.clear();
+                
+                const indicator = document.getElementById('connectionIndicator');
+                const status = document.getElementById('connectionStatus');
+                
+                let loadedTabs = 0;
+                for (const tabName of SHEET_TABS) {
+                    const tabData = await loadSheetTab(SHEET_ID, tabName);
+                    if (tabData.length > 0) {
+                        allData = allData.concat(tabData);
+                        loadedTabs++;
+                    }
+                }
+                
+                if (allData.length > 0) {
+                    indicator.style.backgroundColor = '#10B981';
+                    status.textContent = 'متصل';
+                    status.style.color = '#FFD700';
+                } else {
+                    indicator.style.backgroundColor = '#C9A961';
+                    status.textContent = 'متصل';
+                    status.style.color = '#FFD700';
+                }
+                
+                document.getElementById('resultsContainer').classList.add('hidden');
+                document.getElementById('noResults').classList.add('hidden');
+                
+                return true;
+            } catch (error) {
+                console.error('Error loading data:', error);
+                
+                const indicator = document.getElementById('connectionIndicator');
+                const status = document.getElementById('connectionStatus');
+                indicator.style.backgroundColor = '#EF4444';
+                status.textContent = 'فشل الاتصال';
+                status.style.color = '#EF4444';
+                
+                return false;
+            }
+        }
+
+        function searchTires(searchSize) {
+            const normalizedSearch = extractTireSize(searchSize);
+            if (!normalizedSearch) return [];
+            
+            // البحث عن المقاس مع أو بدون LT
+            const searchWithoutLT = normalizedSearch.replace(/^LT/i, '');
+            
+            const results = allData.filter(item => {
+                const itemSizeWithoutLT = item.tireSize.replace(/^LT/i, '');
+                return item.tireSize === normalizedSearch || itemSizeWithoutLT === searchWithoutLT;
+            });
+            
+            // إزالة النتائج المكررة بناءً على (الماركة + المقاس + النقشة + السنة + السعر)
+            const uniqueResults = [];
+            const seen = new Set();
+            
+            for (const result of results) {
+                const key = `${result.brand}|${result.tireSize}|${result.pattern}|${result.year}|${result.price}`;
+                if (!seen.has(key)) {
+                    seen.add(key);
+                    uniqueResults.push(result);
+                }
+            }
+            
+            return uniqueResults;
+        }
+
+        function populateBrandFilter(results) {
+            const brandCheckboxes = document.getElementById('brandCheckboxes');
+            const brands = new Set();
+            
+            results.forEach(result => {
+                // فقط الماركات التي لها قيمة
+                if (result.brand && result.brand.trim()) {
+                    const brandArabic = translateBrand(result.brand);
+                    brands.add(JSON.stringify({ english: result.brand, arabic: brandArabic }));
+                }
+            });
+            
+            const sortedBrands = Array.from(brands).map(b => JSON.parse(b)).sort((a, b) => a.arabic.localeCompare(b.arabic, 'ar'));
+            
+            brandCheckboxes.innerHTML = '';
+            
+            // عرض الفلتر فقط إذا كان هناك ماركات
+            if (sortedBrands.length > 0) {
+                // إضافة خيار "الكل" في الأعلى
+                const allLabel = document.createElement('label');
+                allLabel.className = 'flex items-center gap-2 cursor-pointer p-2 rounded hover:bg-gray-800 transition-colors';
+                allLabel.style.color = '#FFD700';
+                allLabel.style.fontWeight = 'bold';
+                
+                const allCheckbox = document.createElement('input');
+                allCheckbox.type = 'checkbox';
+                allCheckbox.id = 'selectAll';
+                allCheckbox.className = 'brand-checkbox';
+                allCheckbox.style.accentColor = '#FFD700';
+                allCheckbox.checked = true;
+                
+                const allText = document.createTextNode('الكل');
+                
+                allLabel.appendChild(allCheckbox);
+                allLabel.appendChild(allText);
+                brandCheckboxes.appendChild(allLabel);
+                
+                allCheckbox.addEventListener('change', () => {
+                    const brandCheckboxesList = document.querySelectorAll('.brand-checkbox:not(#selectAll)');
+                    brandCheckboxesList.forEach(cb => {
+                        cb.checked = allCheckbox.checked;
+                    });
+                    filterAndDisplayResults();
+                });
+                
+                // إضافة باقي الماركات
+                sortedBrands.forEach(brand => {
+                    const label = document.createElement('label');
+                    label.className = 'flex items-center gap-2 cursor-pointer p-2 rounded hover:bg-gray-800 transition-colors';
+                    label.style.color = '#FFD700';
+                    
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.value = brand.english;
+                    checkbox.className = 'brand-checkbox';
+                    checkbox.style.accentColor = '#FFD700';
+                    checkbox.checked = true;
+                    
+                    const text = document.createTextNode(brand.arabic);
+                    
+                    label.appendChild(checkbox);
+                    label.appendChild(text);
+                    brandCheckboxes.appendChild(label);
+                    
+                    checkbox.addEventListener('change', () => {
+                        const brandCheckboxesList = document.querySelectorAll('.brand-checkbox:not(#selectAll)');
+                        const allChecked = Array.from(brandCheckboxesList).every(cb => cb.checked);
+                        document.getElementById('selectAll').checked = allChecked;
+                        filterAndDisplayResults();
+                    });
+                });
+                
+                document.getElementById('brandFilterContainer').classList.remove('hidden');
+            }
+        }
+
+        function filterByBrand(results) {
+            const checkedBrands = Array.from(document.querySelectorAll('.brand-checkbox:not(#selectAll):checked')).map(cb => cb.value);
+            
+            // إذا لم يكن هناك فلتر براند، عرض كل النتائج
+            if (checkedBrands.length === 0) {
+                return results.filter(result => !result.brand || !result.brand.trim());
+            }
+            
+            // عرض النتائج المطابقة للبراندات المختارة + النتائج بدون براند
+            return results.filter(result => {
+                return !result.brand || !result.brand.trim() || checkedBrands.includes(result.brand);
+            });
+        }
+        
+        function filterAndDisplayResults() {
+            const filteredResults = filterByBrand(currentSearchResults);
+            displayResults(filteredResults);
+        }
+
+        function displayResults(results) {
+            const config = window.elementSdk ? window.elementSdk.config : defaultConfig;
+            const copyButtonText = config.copy_button_text || defaultConfig.copy_button_text;
+            
+            // ترتيب النتائج من الأرخص للأعلى
+            const sortedResults = [...results].sort((a, b) => {
+                const priceA = parseFloat(a.price) || 0;
+                const priceB = parseFloat(b.price) || 0;
+                return priceA - priceB;
+            });
+            
+            const tbody = document.getElementById('resultsTableBody');
+            tbody.innerHTML = '';
+            
+            sortedResults.forEach((result, index) => {
+                const row = document.createElement('tr');
+                row.className = 'table-row';
+                
+                if (index % 2 === 0) {
+                    row.style.background = '#1a1a1a';
+                } else {
+                    row.style.background = '#0f0f0f';
+                }
+                
+                const brandArabic = translateBrand(result.brand);
+                const countryArabic = translateCountry(result.origin);
+                
+                const brandInputId = `brand-${index}`;
+                const countrySelectId = `country-${index}`;
+                const yearSelectId = `year-${index}`;
+                
+                // تحديد إذا كان ربع حجري أو رن فلات
+                const isLT = result.tireSize.toUpperCase().startsWith('LT');
+                const isRF = isRunFlat(result.tireSize) || isRunFlat(result.pattern);
+                const displaySize = isLT ? `${result.tireSize} (ربع حجري)` : result.tireSize;
+                
+                // إذا كانت الماركة فارغة، نعرض حقل إدخال مع اسم الملف
+                let brandCell;
+                if (result.brand && result.brand.trim()) {
+                    brandCell = `<td class="px-4 py-3 font-bold border-b" style="border-color: #333;">${brandArabic}</td>`;
+                } else {
+                    brandCell = `<td class="px-4 py-3 border-b" style="border-color: #333;">
+                        <div style="font-size: 0.65rem; color: #888; margin-bottom: 4px; font-style: italic;">${result.sheetTab}</div>
+                        <input type="text" id="${brandInputId}" placeholder="أدخل اسم الماركة" class="w-full px-2 py-1 rounded border focus:outline-none text-sm" style="background-color: #000000; color: #FFD700; border-color: #FFD700;">
+                    </td>`;
+                }
+                
+                row.innerHTML = `
+                    ${brandCell}
+                    <td class="px-4 py-3 font-bold border-b" style="color: #FFD700; border-color: #333;">${displaySize}</td>
+                    <td class="px-4 py-3 border-b" style="border-color: #333;">${result.pattern}</td>
+                    <td class="px-4 py-3 border-b" style="border-color: #333;">
+                        <select id="${countrySelectId}" class="w-full px-2 py-1 rounded border focus:outline-none" style="background-color: #000000; color: #FFD700; border-color: #FFD700;">
+                            <option value="">اختر بلد الصنع</option>
+                            ${availableCountries.map(country => 
+                                `<option value="${country}" ${country === countryArabic ? 'selected' : ''}>${country}</option>`
+                            ).join('')}
+                        </select>
+                    </td>
+                    <td class="px-4 py-3 border-b" style="border-color: #333;">
+                        <select id="${yearSelectId}" class="w-full px-2 py-1 rounded border focus:outline-none" style="background-color: #000000; color: #FFD700; border-color: #FFD700;">
+                            <option value="">اختر السنة</option>
+                            ${availableYears.map(year => 
+                                `<option value="${year}" ${year === result.year ? 'selected' : ''}>${year}</option>`
+                            ).join('')}
+                        </select>
+                    </td>
+                    <td class="px-4 py-3 font-bold border-b" style="color: #FFD700; border-color: #333;">${result.price}</td>
+                    <td class="px-4 py-3 text-center border-b" style="border-color: #333;">
+                        <button class="copy-btn px-4 py-2 rounded text-black font-bold hover:opacity-90 transition-opacity" style="background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);">
+                            ${copyButtonText}
+                        </button>
+                    </td>
+                `;
+                
+                const copyBtn = row.querySelector('.copy-btn');
+                copyBtn.addEventListener('click', () => {
+                    // الحصول على اسم الماركة
+                    let finalBrand = brandArabic;
+                    if (!result.brand || !result.brand.trim()) {
+                        const brandInput = document.getElementById(brandInputId);
+                        finalBrand = brandInput ? brandInput.value.trim() : '';
+                        
+                        // التحقق من إدخال الماركة
+                        if (!finalBrand) {
+                            showToast('⚠️ الرجاء إدخال اسم الماركة أولاً');
+                            if (brandInput) {
+                                brandInput.style.borderColor = '#EF4444';
+                                brandInput.focus();
+                                setTimeout(() => {
+                                    brandInput.style.borderColor = '#FFD700';
+                                }, 2000);
+                            }
+                            return;
+                        }
+                    }
+                    
+                    const selectedCountry = document.getElementById(countrySelectId).value;
+                    const selectedYear = document.getElementById(yearSelectId).value;
+                    
+                    // التحقق من اختيار بلد الصنع والسنة
+                    if (!selectedCountry) {
+                        showToast('⚠️ الرجاء اختيار بلد الصنع أولاً');
+                        document.getElementById(countrySelectId).style.borderColor = '#EF4444';
+                        setTimeout(() => {
+                            document.getElementById(countrySelectId).style.borderColor = '#FFD700';
+                        }, 2000);
+                        return;
+                    }
+                    
+                    if (!selectedYear) {
+                        showToast('⚠️ الرجاء اختيار السنة أولاً');
+                        document.getElementById(yearSelectId).style.borderColor = '#EF4444';
+                        setTimeout(() => {
+                            document.getElementById(yearSelectId).style.borderColor = '#FFD700';
+                        }, 2000);
+                        return;
+                    }
+                    
+                    // إضافة معلومات إضافية للماركة (رن فلات أو ربع حجري)
+                    let brandInfo = '';
+                    if (isRF && isLT) {
+                        brandInfo = ' (رن فلات - ربع حجري)';
+                    } else if (isRF) {
+                        brandInfo = ' (رن فلات)';
+                    } else if (isLT) {
+                        brandInfo = ' (ربع حجري)';
+                    }
+                    
+                    // الصيغة: (اسم الماركة) (معلومات إضافية) (بلد الصنع) سنة الصنع . سعر الواحد د.ك
+                    const yearText = selectedYear ? `سنة الصنع ${selectedYear}` : '';
+                    
+                    const copyText = `${finalBrand}${brandInfo} ${selectedCountry} ${yearText}. سعر الواحد ${result.price} د.ك`;
+                    
+                    copyToClipboard(copyText, copyBtn);
+                });
+                
+                tbody.appendChild(row);
+            });
+            
+            document.getElementById('resultsCount').textContent = `تم العثور على ${results.length} نتيجة`;
+            document.getElementById('resultsContainer').classList.remove('hidden');
+            document.getElementById('noResults').classList.add('hidden');
+        }
+
+        async function performSearch() {
+            const searchInput = document.getElementById('searchInput').value.trim();
+            
+            document.getElementById('suggestionsDropdown').classList.add('hidden');
+            
+            if (!searchInput) {
+                document.getElementById('resultsContainer').classList.add('hidden');
+                document.getElementById('noResults').classList.add('hidden');
+                document.getElementById('brandFilterContainer').classList.add('hidden');
+                return;
+            }
+            
+            document.getElementById('errorMessage').classList.add('hidden');
+            
+            currentSearchResults = searchTires(searchInput);
+            
+            if (currentSearchResults.length > 0) {
+                populateBrandFilter(currentSearchResults);
+                filterAndDisplayResults();
+            } else {
+                document.getElementById('resultsContainer').classList.add('hidden');
+                document.getElementById('noResults').classList.remove('hidden');
+                document.getElementById('brandFilterContainer').classList.add('hidden');
+            }
+        }
+        
+        // Filter toggle functionality
+        document.getElementById('filterToggle').addEventListener('click', () => {
+            const filterContent = document.getElementById('filterContent');
+            const arrow = document.querySelector('.arrow');
+            
+            if (filterContent.classList.contains('hidden')) {
+                filterContent.classList.remove('hidden');
+                arrow.classList.add('rotated');
+            } else {
+                filterContent.classList.add('hidden');
+                arrow.classList.remove('rotated');
+            }
+        });
+
+        document.getElementById('searchButton').addEventListener('click', performSearch);
+        
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            showSuggestions(e.target.value);
+        });
+        
+        document.getElementById('searchInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+        
+        // إخفاء الاقتراحات عند النقر خارج حقل البحث
+        document.addEventListener('click', (e) => {
+            const searchInput = document.getElementById('searchInput');
+            const dropdown = document.getElementById('suggestionsDropdown');
+            if (e.target !== searchInput && !dropdown.contains(e.target)) {
+                dropdown.classList.add('hidden');
+            }
+        });
+        
+        window.addEventListener('load', async () => {
+            await loadGoogleSheetsData();
+        });
+
+        if (window.elementSdk) {
+            window.elementSdk.init({
+                defaultConfig,
+                onConfigChange,
+                mapToCapabilities: (config) => ({
+                    recolorables: [],
+                    borderables: [],
+                    fontEditable: undefined,
+                    fontSizeable: undefined
+                }),
+                mapToEditPanelValues: (config) => new Map([
+                    ['site_title', config.site_title || defaultConfig.site_title],
+                    ['search_placeholder', config.search_placeholder || defaultConfig.search_placeholder],
+                    ['search_button_text', config.search_button_text || defaultConfig.search_button_text],
+                    ['copy_button_text', config.copy_button_text || defaultConfig.copy_button_text]
+                ])
+            });
+        }
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b0d6087b6e48308',t:'MTc2NjIxNTIyNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
