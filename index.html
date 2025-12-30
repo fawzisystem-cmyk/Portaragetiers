@@ -170,7 +170,7 @@
            <th class="px-4 py-3 text-right border-b" style="border-color: #333;">بلد الصنع</th>
            <th class="px-4 py-3 text-right border-b" style="border-color: #333;">سنة الصنع</th>
            <th class="px-4 py-3 text-right border-b" style="border-color: #333;">السعر (د.ك)</th>
-           <th class="px-4 py-3 text-center border-b" style="border-color: #333;">نسخ</th>
+           <th class="px-4 py-3 text-center border-b" style="border-color: #333;">نس��</th>
           </tr>
          </thead>
          <tbody id="resultsTableBody" style="color: #FFD700;"><!-- Results will be inserted here -->
@@ -186,15 +186,17 @@
    </div>
   </div>
   <script>
+        // جدول تحويل أسماء الماركات من الإنجليزي إلى العربي
         const brandTranslations = {
-            'MICHELIN': 'ميشلان',
+            'MICHELIN': 'ميشلا��',
             'BRIDGESTONE': 'بريدجستون',
             'GOODYEAR': 'جوديير',
             'CONTINENTAL': 'كونتيننتال',
-            'PIRELLI': 'بيريلي',
+            'PIRELLI': 'بيريللي',
             'DUNLOP': 'دنلوب',
             'YOKOHAMA': 'يوكوهاما',
             'YOKOHAMA AI TERRA TIRE': 'يوكوهاما حجري(جميع التضاريس)',
+            'AI TERRA TIRE': 'يوكوهاما حجري(جميع التضاريس)',
             'HANKOOK': 'هانكوك',
             'KUMHO': 'كومهو',
             'TOYO': 'تويو',
@@ -203,17 +205,17 @@
             'MAXXIS': 'ماكسس',
             'BFGOODRICH': 'بي إف جودريتش',
             'COOPER': 'كوبر',
-            'MAYRUN': 'مايرون',
+            'MAYRUN': 'مايرن',
             'ZETUM': 'زيتوم',
             'APOLLO': 'أبولو',
-            'KINFOREST': 'كين فورست',
-            'Bearway': 'بيرواي',
+            'KINFOREST': 'كينفوريست',
             'ROADSTONE': 'رودستون',
             'SUMITOMO': 'سوميتومو',
             'FIRESTONE': 'فايرستون',
             'ULTRAFORCE': 'ألترا فورس'
         };
 
+        // جدول تحويل الدول من الإنجليزي إلى العربي
         const countryTranslations = {
             'CHINA': 'صيني 🇨🇳',
             'THAILAND': 'تايلندي 🇹🇭',
@@ -241,7 +243,7 @@
             'MEXICO': 'مكسيكي 🇲🇽',
             'UK': 'بريطاني 🇬🇧',
             'UNITED KINGDOM': 'بريطاني 🇬🇧',
-            'RUSSIA': 'روسي 🇷🇺',
+            'RUSSIA': 'رو��ي 🇷🇺',
             'CZECH REPUBLIC': 'تشيكي 🇨🇿',
             'SLOVAKIA': 'سلوفاكي 🇸🇰',
             'HUNGARY': 'مجري 🇭🇺',
@@ -250,7 +252,7 @@
             'AUSTRALIA': 'أسترالي 🇦🇺',
             'NEW ZEALAND': 'نيوزيلندي 🇳🇿',
             'SERBIA': 'صربي 🇷🇸',
-            'PORTUGAL': 'برتغالي 🇵🇹',
+            'PORTUGAL': 'برتغا��ي 🇵🇹',
             'SLOVENIA': 'سلوفيني 🇸🇮'
         };
         
@@ -277,8 +279,8 @@
             'إيطالي 🇮🇹',
             'إسباني 🇪🇸',
             'تركي 🇹🇷',
-            'مكسيكي 🇲🇽',
-            'بريطاني 🇬🇧',
+            'مكسيكي 🇲���',
+            'بريطان�� 🇬🇧',
             'روسي 🇷🇺',
             'تشيكي 🇨🇿',
             'سلوفاكي 🇸🇰',
@@ -312,6 +314,23 @@
             'UltraForce Tires',
             'فرج حولي'
         ];
+        
+        // جدول تحويل أسماء التبويبات إلى أسماء الشركات بالعربي
+        const companyNames = {
+            'Berlin Tires': 'برلين',
+            'FTC': 'FTC',
+            'Babtain Tires': 'البابطين',
+            'YOKOHAMA TIRE': 'يوكاهما الساير',
+            'Al TERRA TIRE (By YOKOHAMA)': 'يوكاهما الساير',
+            'MICHELIN , BFGOODRICH': 'الشايع والصقر',
+            'AL Ghanim Group China': 'الغانم موتري',
+            'AL Ghanim Group Korea': 'الغانم موتري',
+            'AL Ghanim Group SUMITOMO': 'الغانم موتري',
+            'Pirelli Retail price list': 'بيريلي بهبهاني',
+            'Firestone Tires': 'فايرستون (فارتا)',
+            'UltraForce Tires': 'الترا فورس (فارتا)',
+            'فرج حولي': 'فرج حولي'
+        };
         
         let allData = [];
         let allSizes = new Set();
@@ -354,8 +373,6 @@
             const upperText = text.toUpperCase().replace(/\s+/g, '');
             return upperText.includes('RF') || 
                    upperText.includes('R-F') ||
-                    upperText.includes('ZP') ||
-                    upperText.includes('zp') ||
                    upperText.includes('RFT') || 
                    upperText.includes('RUNFLAT') || 
                    upperText.includes('RUNFLAT');
@@ -378,7 +395,7 @@
                     // إزالة TL وأي فراغات زائدة
                     pattern = afterSize.replace(/TL/gi, '').replace(/\s+/g, ' ').trim();
                 } else {
-                    // للمقاسات الخاصة، حاول استخراج أي نص إضافي
+                    // للمقاسات الخا��ة، حاول استخراج أي نص إضافي
                     const parts = sizeText.split(' ');
                     if (parts.length > 1) {
                         pattern = parts.slice(1).join(' ').replace(/TL/gi, '').trim();
@@ -430,7 +447,7 @@
                 showToast('تم النسخ بنجاح!');
                 
                 const originalText = button.textContent;
-                button.textContent = '✓ تم النسخ';
+                button.textContent = '✓ تم ال��سخ';
                 button.style.background = '#10B981';
                 
                 setTimeout(() => {
@@ -504,7 +521,7 @@
                             const price = row.c[5]?.v || row.c[5]?.f || row.c[4]?.v || row.c[4]?.f || '';
                             const origin = row.c[6]?.v || row.c[6]?.f || '';
                             
-                            // تجاهل صف العناوين فقط
+                            // تجاهل صف العناو��ن فقط
                             if (brand && brand.toUpperCase() === 'BRAND') continue;
                             
                             const normalizedSize = extractTireSize(tireSize);
@@ -683,7 +700,7 @@
         function filterByBrand(results) {
             const checkedBrands = Array.from(document.querySelectorAll('.brand-checkbox:not(#selectAll):checked')).map(cb => cb.value);
             
-            // إذا لم يكن هناك فلتر براند، عرض كل النتائج
+            // إذا لم يك�� هناك فلتر براند، عرض كل النتائج
             if (checkedBrands.length === 0) {
                 return results.filter(result => !result.brand || !result.brand.trim());
             }
@@ -703,7 +720,7 @@
             const config = window.elementSdk ? window.elementSdk.config : defaultConfig;
             const copyButtonText = config.copy_button_text || defaultConfig.copy_button_text;
             
-            // ترتيب النتائج من الأرخص للأعلى
+            // ترتيب النتائج من الأرخص ��لأعلى
             const sortedResults = [...results].sort((a, b) => {
                 const priceA = parseFloat(a.price) || 0;
                 const priceB = parseFloat(b.price) || 0;
@@ -725,6 +742,7 @@
                 
                 const brandArabic = translateBrand(result.brand);
                 const countryArabic = translateCountry(result.origin);
+                const companyName = companyNames[result.sheetTab] || result.sheetTab;
                 
                 const brandInputId = `brand-${index}`;
                 const countrySelectId = `country-${index}`;
@@ -735,19 +753,15 @@
                 const isRF = isRunFlat(result.tireSize) || isRunFlat(result.pattern);
                 const displaySize = isLT ? `${result.tireSize} (ربع حجري)` : result.tireSize;
                 
-                // إذا كانت الماركة فارغة، نعرض حقل إدخال مع اسم الملف
-                let brandCell;
-                if (result.brand && result.brand.trim()) {
-                    brandCell = `<td class="px-4 py-3 font-bold border-b" style="border-color: #333;">${brandArabic}</td>`;
-                } else {
-                    brandCell = `<td class="px-4 py-3 border-b" style="border-color: #333;">
-                        <div style="font-size: 0.65rem; color: #888; margin-bottom: 4px; font-style: italic;">${result.sheetTab}</div>
-                        <input type="text" id="${brandInputId}" placeholder="أدخل اسم الماركة" class="w-full px-2 py-1 rounded border focus:outline-none text-sm" style="background-color: #000000; color: #FFD700; border-color: #FFD700;">
-                    </td>`;
-                }
-                
+                // جميع الخلايا تعرض اسم الشركة
                 row.innerHTML = `
-                    ${brandCell}
+                    <td class="px-4 py-3 border-b" style="border-color: #333;">
+                        <div style="font-size: 0.7rem; color: #888; margin-bottom: 6px; font-weight: 600;">${companyName}</div>
+                        ${result.brand && result.brand.trim() 
+                            ? `<div class="font-bold">${brandArabic}</div>` 
+                            : `<input type="text" id="${brandInputId}" placeholder="أدخل اسم الماركة" class="w-full px-2 py-1 rounded border focus:outline-none text-sm" style="background-color: #000000; color: #FFD700; border-color: #FFD700;">`
+                        }
+                    </td>
                     <td class="px-4 py-3 font-bold border-b" style="color: #FFD700; border-color: #333;">${displaySize}</td>
                     <td class="px-4 py-3 border-b" style="border-color: #333;">${result.pattern}</td>
                     <td class="px-4 py-3 border-b" style="border-color: #333;">
@@ -782,7 +796,7 @@
                         const brandInput = document.getElementById(brandInputId);
                         finalBrand = brandInput ? brandInput.value.trim() : '';
                         
-                        // التحقق من إدخال الماركة
+                        // التحقق من ��دخال الماركة
                         if (!finalBrand) {
                             showToast('⚠️ الرجاء إدخال اسم الماركة أولاً');
                             if (brandInput) {
@@ -928,5 +942,5 @@
             });
         }
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b0d6087b6e48308',t:'MTc2NjIxNTIyNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b5fee1963af7cc9',t:'MTc2NzA4MDg1Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
