@@ -170,7 +170,7 @@
            <th class="px-4 py-3 text-right border-b" style="border-color: #333;">بلد الصنع</th>
            <th class="px-4 py-3 text-right border-b" style="border-color: #333;">سنة الصنع</th>
            <th class="px-4 py-3 text-right border-b" style="border-color: #333;">السعر (د.ك)</th>
-           <th class="px-4 py-3 text-center border-b" style="border-color: #333;">نس��</th>
+           <th class="px-4 py-3 text-center border-b" style="border-color: #333;">نسخ</th>
           </tr>
          </thead>
          <tbody id="resultsTableBody" style="color: #FFD700;"><!-- Results will be inserted here -->
@@ -188,7 +188,7 @@
   <script>
         // جدول تحويل أسماء الماركات من الإنجليزي إلى العربي
         const brandTranslations = {
-            'MICHELIN': 'ميشلا��',
+            'MICHELIN': 'ميشلان',
             'BRIDGESTONE': 'بريدجستون',
             'GOODYEAR': 'جوديير',
             'CONTINENTAL': 'كونتيننتال',
@@ -243,7 +243,7 @@
             'MEXICO': 'مكسيكي 🇲🇽',
             'UK': 'بريطاني 🇬🇧',
             'UNITED KINGDOM': 'بريطاني 🇬🇧',
-            'RUSSIA': 'رو��ي 🇷🇺',
+            'RUSSIA': 'روسي 🇷🇺',
             'CZECH REPUBLIC': 'تشيكي 🇨🇿',
             'SLOVAKIA': 'سلوفاكي 🇸🇰',
             'HUNGARY': 'مجري 🇭🇺',
@@ -252,7 +252,7 @@
             'AUSTRALIA': 'أسترالي 🇦🇺',
             'NEW ZEALAND': 'نيوزيلندي 🇳🇿',
             'SERBIA': 'صربي 🇷🇸',
-            'PORTUGAL': 'برتغا��ي 🇵🇹',
+            'PORTUGAL': 'برتغاتي 🇵🇹',
             'SLOVENIA': 'سلوفيني 🇸🇮'
         };
         
@@ -280,7 +280,7 @@
             'إسباني 🇪🇸',
             'تركي 🇹🇷',
             'مكسيكي 🇲���',
-            'بريطان�� 🇬🇧',
+            'بريطاني 🇬🇧',
             'روسي 🇷🇺',
             'تشيكي 🇨🇿',
             'سلوفاكي 🇸🇰',
@@ -374,6 +374,7 @@
             return upperText.includes('RF') || 
                    upperText.includes('R-F') ||
                    upperText.includes('RFT') || 
+                   upperText.includes('ZP') || 
                    upperText.includes('RUNFLAT') || 
                    upperText.includes('RUNFLAT');
         }
@@ -447,7 +448,7 @@
                 showToast('تم النسخ بنجاح!');
                 
                 const originalText = button.textContent;
-                button.textContent = '✓ تم ال��سخ';
+                button.textContent = '✓ تم النسخ';
                 button.style.background = '#10B981';
                 
                 setTimeout(() => {
