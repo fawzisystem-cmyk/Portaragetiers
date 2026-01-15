@@ -132,8 +132,15 @@
        <h1 class="text-4xl font-bold mb-2" style="color: #FFD700;">بحث الإطارات</h1>
        <p style="color: #FFD700;">ابحث عن الإطار المناسب حسب المقاس</p>
       </div>
+     </div><!-- Loading Screen -->
+     <div id="initialLoading" class="rounded-lg shadow-2xl p-12 mb-8 border-2 text-center" style="background: #1a1a1a; border-color: #FFD700;">
+      <div class="flex flex-col items-center gap-4">
+       <div class="loader"></div>
+       <p class="text-xl font-bold" style="color: #FFD700;">جاري تحميل البيانات...</p>
+       <p class="text-sm" style="color: #FFD700; opacity: 0.8;">الرجاء الانتظار</p>
+      </div>
      </div><!-- Search Box -->
-     <div class="rounded-lg shadow-2xl p-6 mb-8 border-2 relative" style="background: #1a1a1a; border-color: #FFD700;">
+     <div id="searchBox" class="hidden rounded-lg shadow-2xl p-6 mb-8 border-2 relative" style="background: #1a1a1a; border-color: #FFD700;">
       <div class="flex gap-4 relative">
        <div class="flex-1 relative"><input type="text" id="searchInput" placeholder="أدخل مقاس الإطار (مثال: 215/55R17)" class="w-full px-4 py-3 rounded-lg text-lg border-2 focus:outline-none" style="background-color: #000000; color: #FFD700; border-color: #FFD700;" autocomplete="off">
         <div id="suggestionsDropdown" class="suggestions-dropdown hidden"></div>
@@ -189,7 +196,6 @@
         // جدول تحويل أسماء الماركات من الإنجليزي إلى العربي
         const brandTranslations = {
             'MICHELIN': 'ميشلان',
-            'mc': 'ميشلان ,اشتر واحد والثاني مجانا',
             'BRIDGESTONE': 'بريدجستون',
             'GOODYEAR': 'جوديير',
             'CONTINENTAL': 'كونتيننتال',
@@ -204,17 +210,29 @@
             'FALKEN': 'فالكن',
             'NEXEN': 'نيكسن',
             'MAXXIS': 'ماكسس',
-            'BFGOODRICH': '*اشتر واحد والثاني مجانا*بي إف جودريتش',
-            'bf': 'بي إف جودريتش ,اشتر واحد والثاني مجانا',
+            'BFGOODRICH': 'بي إف جودريتش',
             'COOPER': 'كوبر',
             'MAYRUN': 'مايرن',
             'ZETUM': 'زيتوم',
             'APOLLO': 'أبولو',
-            'KINFOREST': 'كينفوريست',
             'ROADSTONE': 'رودستون',
             'SUMITOMO': 'سوميتومو',
             'FIRESTONE': 'فايرستون',
-            'ULTRAFORCE': 'ألترا فورس'
+            'ULTRAFORCE': 'ألترا فورس',
+            'KINFOREST': 'كين فورست',
+            'ARROYO': 'أرويو',
+           'CENTARA': 'سنتارا',
+           'HAMAN1': 'هامان',
+           'TESCHE': 'تيشي',
+           'LANDSPIDER': 'لاند سبايدر',
+           'KETER': 'كيتر',
+           'WIDEWAY': 'وايد واي',
+           'BEARWAY': 'بير واي',
+           'ARROYO/CENTARA': 'أرويو / سنتارا',
+           'KETER/ARROYO': 'كيتر / أرويو',
+           'ARROYO/LANDSPIDER': 'أرويو / لاند سبايدر'
+
+         
         };
 
         // جدول تحويل الدول من الإنجليزي إلى العربي
@@ -254,7 +272,7 @@
             'AUSTRALIA': 'أسترالي 🇦🇺',
             'NEW ZEALAND': 'نيوزيلندي 🇳🇿',
             'SERBIA': 'صربي 🇷🇸',
-            'PORTUGAL': 'برتغاتي 🇵🇹',
+            'PORTUGAL': 'برتغالي 🇵🇹',
             'SLOVENIA': 'سلوفيني 🇸🇮'
         };
         
@@ -281,7 +299,7 @@
             'إيطالي 🇮🇹',
             'إسباني 🇪🇸',
             'تركي 🇹🇷',
-            'مكسيكي 🇲���',
+            'مكسيكي 🇲',
             'بريطاني 🇬🇧',
             'روسي 🇷🇺',
             'تشيكي 🇨🇿',
@@ -314,8 +332,9 @@
             'Pirelli Retail price list',
             'Firestone Tires',
             'UltraForce Tires',
-            'فرج حولي',
+            'فرج حولي'
             'MICHELIN , BFGOODRICH offer'
+
         ];
         
         // جدول تحويل أسماء التبويبات إلى أسماء الشركات بالعربي
@@ -332,9 +351,7 @@
             'Pirelli Retail price list': 'بيريلي بهبهاني',
             'Firestone Tires': 'فايرستون (فارتا)',
             'UltraForce Tires': 'الترا فورس (فارتا)',
-             'MICHELIN , BFGOODRICH offer': 'الشايع والصقر',
             'فرج حولي': 'فرج حولي'
-         
         };
         
         let allData = [];
@@ -357,8 +374,12 @@
             if (!sizeText) return null;
             const cleanText = sizeText.trim();
             
+            // تحويل المقاسات بصيغة 275/45/14 إلى 275/45R14
+            let processedText = cleanText.replace(/(\d{3})\/(\d{2})\/(\d{2})/g, '$1/$2R$3');
+            processedText = processedText.replace(/(LT\d{3})\/(\d{2})\/(\d{2})/gi, '$1/$2R$3');
+            
             // المقاسات العادية (مثل 215/60R16 أو LT265/65R17)
-            const normalMatch = cleanText.replace(/\s+/g, '').match(/(LT)?\d{3}\/\d{2}[A-Z\-]*\d{2}/i);
+            const normalMatch = processedText.replace(/\s+/g, '').match(/(LT)?\d{3}\/\d{2}[A-Z\-]*\d{2}/i);
             if (normalMatch) {
                 const normalized = normalMatch[0].replace(/([\/\d{2}])[A-Z\-]+(\d{2})/i, '$1R$2');
                 return normalized.toUpperCase();
@@ -379,7 +400,6 @@
             return upperText.includes('RF') || 
                    upperText.includes('R-F') ||
                    upperText.includes('RFT') || 
-                   upperText.includes('ZP') || 
                    upperText.includes('RUNFLAT') || 
                    upperText.includes('RUNFLAT');
         }
@@ -391,7 +411,7 @@
             if (patternColumn && patternColumn.trim()) {
                 pattern = patternColumn.trim();
             } 
-            // إذا لم تكن موجودة، استخرج النقشة من نص المقاس (بعد المقاس نفسه)
+            // إذا لم تكن موجودة، ����تخرج النقشة من نص المقاس (بعد المقاس نفسه)
             else if (sizeText) {
                 // إزالة المقاس الأساسي والحصول على ما بعده
                 const sizeMatch = sizeText.match(/(LT)?\d{3}\/\d{2}[A-Z\-]*\d{2}/i);
@@ -409,7 +429,7 @@
                 }
             }
             
-            // إضافة إشارة رن فلات إذا كان موجوداً
+            // ��ضافة إشارة رن فلات إذا كان موجوداً
             if (isRunFlat(sizeText) || isRunFlat(patternColumn)) {
                 pattern = pattern ? `${pattern} (رن فلات)` : '(رن فلات)';
             }
@@ -461,7 +481,7 @@
                     button.style.background = 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)';
                 }, 1500);
             } catch (err) {
-                showToast('فشل النسخ، حاول مرة أخرى');
+                showToast('فشل النسخ، حاول مره أخرى');
             }
             
             document.body.removeChild(textArea);
@@ -532,7 +552,7 @@
                             
                             const normalizedSize = extractTireSize(tireSize);
                             
-                            // إضافة الصف إذا كان المقاس والسعر موجودين (حتى لو البراند فارغ)
+                            // إ��افة الصف إذا كان المقاس والسعر موجودين (حتى لو البراند فارغ)
                             if (normalizedSize && price && price.toString().trim()) {
                                 allSizes.add(normalizedSize);
                                 sheetData.push({
@@ -564,14 +584,16 @@
                 const indicator = document.getElementById('connectionIndicator');
                 const status = document.getElementById('connectionStatus');
                 
-                let loadedTabs = 0;
-                for (const tabName of SHEET_TABS) {
-                    const tabData = await loadSheetTab(SHEET_ID, tabName);
+                // تحميل جميع التبويبات بشكل متوازي لتسريع العملية
+                const loadPromises = SHEET_TABS.map(tabName => loadSheetTab(SHEET_ID, tabName));
+                const results = await Promise.all(loadPromises);
+                
+                // دمج جميع النتائج
+                results.forEach(tabData => {
                     if (tabData.length > 0) {
                         allData = allData.concat(tabData);
-                        loadedTabs++;
                     }
-                }
+                });
                 
                 if (allData.length > 0) {
                     indicator.style.backgroundColor = '#10B981';
@@ -582,6 +604,10 @@
                     status.textContent = 'متصل';
                     status.style.color = '#FFD700';
                 }
+                
+                // إظهار مربع البحث بعد التحميل
+                document.getElementById('initialLoading').classList.add('hidden');
+                document.getElementById('searchBox').classList.remove('hidden');
                 
                 document.getElementById('resultsContainer').classList.add('hidden');
                 document.getElementById('noResults').classList.add('hidden');
@@ -595,6 +621,10 @@
                 indicator.style.backgroundColor = '#EF4444';
                 status.textContent = 'فشل الاتصال';
                 status.style.color = '#EF4444';
+                
+                // إظهار مربع البحث حتى لو فشل التحميل
+                document.getElementById('initialLoading').classList.add('hidden');
+                document.getElementById('searchBox').classList.remove('hidden');
                 
                 return false;
             }
@@ -759,7 +789,7 @@
                 const isRF = isRunFlat(result.tireSize) || isRunFlat(result.pattern);
                 const displaySize = isLT ? `${result.tireSize} (ربع حجري)` : result.tireSize;
                 
-                // جميع الخلايا تعرض اسم الشركة
+                // جميع ال��لايا تعرض اسم الشركة
                 row.innerHTML = `
                     <td class="px-4 py-3 border-b" style="border-color: #333;">
                         <div style="font-size: 0.7rem; color: #888; margin-bottom: 6px; font-weight: 600;">${companyName}</div>
@@ -948,5 +978,5 @@
             });
         }
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b5fee1963af7cc9',t:'MTc2NzA4MDg1Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9be630c7807e51c4',t:'MTc2ODQ4ODY3OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
