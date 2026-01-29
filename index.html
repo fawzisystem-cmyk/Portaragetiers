@@ -3,7 +3,7 @@
  <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>بحث الإطارات</title>
+  <title>بحث التواير</title>
   <script src="/_sdk/element_sdk.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
@@ -73,7 +73,7 @@
         .suggestion-item {
             padding: 12px 16px;
             cursor: pointer;
-            color: #FFD700;
+            color: #e5e5e5;
             border-bottom: 1px solid #333;
             transition: all 0.2s;
         }
@@ -89,6 +89,7 @@
         
         .table-row {
             transition: all 0.2s;
+            color: #e5e5e5;
         }
         
         .table-row:hover {
@@ -114,6 +115,107 @@
         .arrow.rotated {
             transform: rotate(180deg);
         }
+        
+        .info-btn {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #000000;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: all 0.2s;
+            border: 2px solid #FFD700;
+        }
+        
+        .info-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        
+        .info-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+        
+        .info-modal-content {
+            background: #1a1a1a;
+            border: 2px solid #FFD700;
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .info-close {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: #FFD700;
+            color: #000000;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 20px;
+            transition: all 0.2s;
+        }
+        
+        .info-close:hover {
+            background: #FFA500;
+            transform: rotate(90deg);
+        }
+        
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+        }
+        
+        .info-table tr {
+            border-bottom: 1px solid #333;
+        }
+        
+        .info-table tr:last-child {
+            border-bottom: none;
+        }
+        
+        .info-table td {
+            padding: 12px;
+            color: #e5e5e5;
+        }
+        
+        .info-table td:first-child {
+            font-weight: bold;
+            width: 40%;
+            background: #0f0f0f;
+            border-left: 3px solid #FFD700;
+        }
+        
+        .info-table td:last-child {
+            width: 60%;
+            background: #1a1a1a;
+        }
     </style>
   <style>@view-transition { navigation: auto; }</style>
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
@@ -127,10 +229,10 @@
    </div>
    <div class="min-h-full py-8 px-4">
     <div class="max-w-6xl mx-auto"><!-- Header -->
-     <div class="text-center mb-8"><img src="https://i.top4top.io/p_35860o72q1.png" alt="بحث الإطارات" class="mx-auto mb-4" style="max-width: 500px; width: 100%; height: auto;" onerror="this.style.display='none'; document.getElementById('fallbackTitle').style.display='block';">
+     <div class="text-center mb-8"><img src="https://i.top4top.io/p_35860o72q1.png" alt="بحث التواير" class="mx-auto mb-4" style="max-width: 500px; width: 100%; height: auto;" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.display='none'; document.getElementById('fallbackTitle').style.display='block';">
       <div id="fallbackTitle" style="display: none;">
-       <h1 class="text-4xl font-bold mb-2" style="color: #FFD700;">بحث الإطارات</h1>
-       <p style="color: #FFD700;">ابحث عن الإطار المناسب حسب المقاس</p>
+       <h1 class="text-4xl font-bold mb-2" style="color: #FFD700;">بحث التواير</h1>
+       <p style="color: #FFD700;">ابحث عن التاير المناسب حسب المقاس</p>
       </div>
      </div><!-- Loading Screen -->
      <div id="initialLoading" class="rounded-lg shadow-2xl p-12 mb-8 border-2 text-center" style="background: #1a1a1a; border-color: #FFD700;">
@@ -142,7 +244,7 @@
      </div><!-- Search Box -->
      <div id="searchBox" class="hidden rounded-lg shadow-2xl p-6 mb-8 border-2 relative" style="background: #1a1a1a; border-color: #FFD700;">
       <div class="flex gap-4 relative">
-       <div class="flex-1 relative"><input type="text" id="searchInput" placeholder="أدخل مقاس الإطار (مثال: 215/55R17)" class="w-full px-4 py-3 rounded-lg text-lg border-2 focus:outline-none" style="background-color: #000000; color: #FFD700; border-color: #FFD700;" autocomplete="off">
+       <div class="flex-1 relative"><input type="text" id="searchInput" placeholder="ءدخل مقاس التاير (مثال: 215/55R17)" class="w-full px-4 py-3 rounded-lg text-lg border-2 focus:outline-none" style="background-color: #000000; color: #e5e5e5; border-color: #FFD700;" autocomplete="off">
         <div id="suggestionsDropdown" class="suggestions-dropdown hidden"></div>
        </div><button id="searchButton" class="px-8 py-3 rounded-lg font-bold text-black text-lg hover:opacity-90 transition-opacity" style="background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);"> بحث </button>
       </div>
@@ -170,7 +272,7 @@
        <div class="overflow-x-auto">
         <table class="w-full">
          <thead>
-          <tr style="background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%); color: #FFD700;">
+          <tr style="background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%); color: #ffffff;">
            <th class="px-4 py-3 text-right border-b" style="border-color: #333;">الماركة</th>
            <th class="px-4 py-3 text-right border-b" style="border-color: #333;">المقاس</th>
            <th class="px-4 py-3 text-right border-b" style="border-color: #333;">النقشة</th>
@@ -180,7 +282,7 @@
            <th class="px-4 py-3 text-center border-b" style="border-color: #333;">نسخ</th>
           </tr>
          </thead>
-         <tbody id="resultsTableBody" style="color: #FFD700;"><!-- Results will be inserted here -->
+         <tbody id="resultsTableBody" style="color: #e5e5e5;"><!-- Results will be inserted here -->
          </tbody>
         </table>
        </div>
@@ -193,7 +295,85 @@
    </div>
   </div>
   <script>
-        // جدول تحويل أسماء الماركات من الإنجليزي إلى العربي
+        // مصفوفة عامة لتخزين معلومات التواير
+        window.tireInfoData = [];
+        
+        // دالة ��امة لعرض نافذة المعلومات
+        window.showInfoModal = function(index) {
+            const data = window.tireInfoData[index];
+            if (!data) return;
+            
+            const { info, sizeText, displaySize, pattern } = data;
+            
+            // إزالة أي نافذة منبثقة موجودة
+            const existingModal = document.querySelector('.info-modal');
+            if (existingModal) {
+                existingModal.remove();
+            }
+            
+            // إن��اء النافذة المنبثقة
+            const modal = document.createElement('div');
+            modal.className = 'info-modal';
+            
+            let content = '<div class="info-modal-content">';
+            content += '<div class="info-close" onclick="this.closest(\'.info-modal\').remove()">×</div>';
+            content += '<h2 class="text-2xl font-bold mb-4" style="color: #ffffff;">معلومات التاير</h2>';
+            
+            // بداية الجدول
+            content += '<table class="info-table">';
+            
+            // المقاس
+            if (displaySize) {
+                content += '<tr><td>المقاس</td><td>' + displaySize + '</td></tr>';
+            }
+            
+            // النقشة
+            if (pattern) {
+                content += '<tr><td>النقشة</td><td>' + pattern + '</td></tr>';
+            }
+            
+            // السرعة القصوى
+            if (info && info.speedRating && speedRatings[info.speedRating]) {
+                const rating = speedRatings[info.speedRating];
+                let speedText = rating.speed + ' كم/ساعة';
+                content += '<tr><td>السرعة القصوى</td><td>' + speedText + '</td></tr>';
+            }
+            
+            // رقم الحمولة
+            if (info && info.loadIndex) {
+                content += '<tr><td>رقم الحمولة</td><td>' + info.loadIndex + '</td></tr>';
+            }
+            
+            // مخصص لسيارا��
+            if (info && info.carBrandCode && carBrandCodes[info.carBrandCode]) {
+                content += '<tr><td>مخصص لسيارات</td><td>' + carBrandCodes[info.carBrandCode] + '</td></tr>';
+            }
+            
+            // ربع حجري
+            if (info && info.isLT) {
+                content += '<tr><td>النوع</td><td>ربع حجري (Light Truck)</td></tr>';
+            }
+            
+            // رن فلات
+            if (info && info.isRunFlat) {
+                content += '<tr><td>تقنية خاصة</td><td>رن فلات (Run Flat)</td></tr>';
+            }
+            
+            content += '</table>';
+            content += '</div>';
+            modal.innerHTML = content;
+            
+            // إغلاق النافذة عند النق�� عل�� الخلفية
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
+            
+            document.body.appendChild(modal);
+        };
+        
+        // جدول تحويل ��سماء الماركات م�� الإنجليزي إلى العربي
         const brandTranslations = {
             'MICHELIN': 'ميشلان',
             'BRIDGESTONE': 'بريدجستون',
@@ -202,7 +382,7 @@
             'PIRELLI': 'بيريللي',
             'DUNLOP': 'دنلوب',
             'YOKOHAMA': 'يوكوهاما',
-            'YOKOHAMA AI TERRA TIRE': 'يوكوهاما حجري(جميع التضاريس)',
+            'YOKOHAMA AI TERRA TIRE': 'يوكاهاما حجري(جميع التضاريس)',
             'AI TERRA TIRE': 'يوكوهاما حجري(جميع التضاريس)',
             'HANKOOK': 'هانكوك',
             'KUMHO': 'كومهو',
@@ -215,28 +395,11 @@
             'MAYRUN': 'مايرن',
             'ZETUM': 'زيتوم',
             'APOLLO': 'أبولو',
+            'KINFOREST': 'كين فورست',
             'ROADSTONE': 'رودستون',
             'SUMITOMO': 'سوميتومو',
             'FIRESTONE': 'فايرستون',
-            'ULTRAFORCE': 'ألترا فورس',
-            'KINFOREST': 'كين فورست',
-            'ARROYO': 'أرويو',
-           'CENTARA': 'سنتارا',
-           'HAMAN1': 'هامان',
-           'TESCHE': 'تيشي',
-           'OTANI': 'أوتاني',
-          'DELINTE': 'دلِنتي',
-          'ZTX': 'زتكس',
-           'ATLASE': 'أطلس',
-           'LANDSPIDER': 'لاند سبايدر',
-           'KETER': 'كيتر',
-           'WIDEWAY': 'وايد واي',
-           'BEARWAY': 'بير واي',
-           'ARROYO/CENTARA': 'أرويو / سنتارا',
-           'KETER/ARROYO': 'كيتر / أرويو',
-           'ARROYO/LANDSPIDER': 'أرويو / لاند سبايدر'
-
-         
+            'ULTRAFORCE': 'ألترا فورس'
         };
 
         // جدول تحويل الدول من الإنجليزي إلى العربي
@@ -274,13 +437,10 @@
             'ROMANIA': 'روماني 🇷🇴',
             'ARGENTINA': 'أرجنتيني 🇦🇷',
             'AUSTRALIA': 'أسترالي 🇦🇺',
-            'NEW ZEALAND': 'نيوزيلندي 🇳🇿',
             'SERBIA': 'صربي 🇷🇸',
-            'PORTUGAL': 'برتغالي 🇵🇹',
-            'SLOVENIA': 'سلوفيني 🇸🇮'
+            'PORTUGAL': 'برتغالي 🇵🇹'
         };
         
-        // قائمة الدول المتاحة للاختيار
         const availableCountries = [
             'صيني 🇨🇳',
             'تايلندي 🇹🇭',
@@ -303,7 +463,7 @@
             'إيطالي 🇮🇹',
             'إسباني 🇪🇸',
             'تركي 🇹🇷',
-            'مكسيكي 🇲',
+            'مكسيكي 🇲🇽',
             'بريطاني 🇬🇧',
             'روسي 🇷🇺',
             'تشيكي 🇨🇿',
@@ -320,8 +480,57 @@
         
         // قائمة السنوات المتاحة
         const availableYears = ['2024', '2025', '2026'];
+        
+        // جدول السرعات
+        const speedRatings = {
+            'S': { speed: '180', description: '' },
+            'T': { speed: '190', description: '' },
+            'H': { speed: '210', description: '' },
+            'V': { speed: '240', description: '' },
+            'W': { speed: '270', description: '' },
+            'Y': { speed: '300', description: '' }
+        };
+        
+        // جدول رموز الشركات
+        const carBrandCodes = {
+            'AR': 'ألفا روميو',
+            'AML': 'أستون مارتن',
+            'AO': 'أودي',
+            'AOE': 'أودي',
+            'AO1': 'أودي',
+            'RO1': 'أودي كواترو',
+            'BG': 'بوغاتي',
+            '*': 'بي إم دبليو / ميني كوبر',
+            'GOE': 'جينيسيس / هيونداي',
+            'HN': 'هيونداي',
+            'J': 'جاكوار',
+            'LR': 'لاند روفر',
+            'JLR': 'لاند روفر',
+            'K1': 'فيراري',
+            'K2': 'فيراري',
+            'K3': 'فيراري',
+            'FP': 'فورد بيرفورمانس',
+            'LTS': 'لوتس',
+            'LM': 'لوسيد',
+            'MGT': 'مازيراتي',
+            'MO': 'مرسيدس بنز / AMG',
+            'MOE': 'مرسيدس بنز / AMG',
+            'MO1': 'مرسيدس بنز / AMG',
+            'i': 'نيو',
+            'POL': 'بولستار',
+            'N0': 'بورشه',
+            'N1': 'بورشه',
+            'N2': 'بورشه',
+            'N3': 'بورشه',
+            'N4': 'بورشه',
+            'R': 'رينو',
+            'T0': 'تسلا',
+            'T1': 'تسلا',
+            'TPC': 'كاديلاك / كورفيت',
+            'VOL': 'فولفو'
+        };
 
-        // معرف الملف وأسماء التبويبات
+        // معرف الملف وأسماء ��لتبويبات
         const SHEET_ID = '1x2ongtstODqEEWh_jAwN8zLHjsYeIppk8EH_Q1CXMzk';
         const SHEET_TABS = [
             'Berlin Tires',
@@ -336,10 +545,7 @@
             'Pirelli Retail price list',
             'Firestone Tires',
             'UltraForce Tires',
-            'فرج حولي',
-            'ZEETEX Tiers',
-            'MICHELIN , BFGOODRICH offer'
-
+            'فرج حولي'
         ];
         
         // جدول تحويل أسماء التبويبات إلى أسماء الشركات بالعربي
@@ -356,7 +562,6 @@
             'Pirelli Retail price list': 'بيريلي بهبهاني',
             'Firestone Tires': 'فايرستون (فارتا)',
             'UltraForce Tires': 'الترا فورس (فارتا)',
-            'ZEETEX Tiers': 'زيتكس',
             'فرج حولي': 'فرج حولي'
         };
         
@@ -365,8 +570,8 @@
         let currentSearchResults = [];
 
         const defaultConfig = {
-            site_title: 'بحث الإطارات',
-            search_placeholder: 'أدخل مقاس الإطار (مثال: 215/55R17)',
+            site_title: 'بحث التواير',
+            search_placeholder: 'أدخل مقاس التاير (مثال: 215/55R17)',
             search_button_text: 'بحث',
             copy_button_text: 'نسخ'
         };
@@ -384,7 +589,7 @@
             let processedText = cleanText.replace(/(\d{3})\/(\d{2})\/(\d{2})/g, '$1/$2R$3');
             processedText = processedText.replace(/(LT\d{3})\/(\d{2})\/(\d{2})/gi, '$1/$2R$3');
             
-            // المقاسات العادية (مثل 215/60R16 أو LT265/65R17)
+            // المقاسات ��لعادية (مثل 215/60R16 أو LT265/65R17)
             const normalMatch = processedText.replace(/\s+/g, '').match(/(LT)?\d{3}\/\d{2}[A-Z\-]*\d{2}/i);
             if (normalMatch) {
                 const normalized = normalMatch[0].replace(/([\/\d{2}])[A-Z\-]+(\d{2})/i, '$1R$2');
@@ -413,21 +618,21 @@
         function extractPattern(sizeText, patternColumn) {
             let pattern = '';
             
-            // إذا كانت خانة النقشة موجودة، استخدمها
+            // إذا كا��ت خانة النقشة موجودة، استخدمها
             if (patternColumn && patternColumn.trim()) {
                 pattern = patternColumn.trim();
             } 
-            // إذا لم تكن موجودة، ����تخرج النقشة من نص المقاس (بعد المقاس نفسه)
+            // إذا لم تكن موجودة، استخرج النقشة من نص المقاس (بعد المقاس نفسه)
             else if (sizeText) {
                 // إزالة المقاس الأساسي والحصول على ما بعده
                 const sizeMatch = sizeText.match(/(LT)?\d{3}\/\d{2}[A-Z\-]*\d{2}/i);
                 if (sizeMatch) {
-                    // الحصول على النص بعد المقاس
+                    // الحصول على النص بع�� المقاس
                     const afterSize = sizeText.substring(sizeMatch.index + sizeMatch[0].length).trim();
                     // إزالة TL وأي فراغات زائدة
                     pattern = afterSize.replace(/TL/gi, '').replace(/\s+/g, ' ').trim();
                 } else {
-                    // للمقاسات الخا��ة، حاول استخراج أي نص إضافي
+                    // للمقاسات الخاصة، حاول استخراج أي نص ��ضافي
                     const parts = sizeText.split(' ');
                     if (parts.length > 1) {
                         pattern = parts.slice(1).join(' ').replace(/TL/gi, '').trim();
@@ -435,7 +640,7 @@
                 }
             }
             
-            // ��ضافة إشارة رن فلات إذا كان موجوداً
+            // إضافة إشارة رن فلات إذا كان موجوداً
             if (isRunFlat(sizeText) || isRunFlat(patternColumn)) {
                 pattern = pattern ? `${pattern} (رن فلات)` : '(رن فلات)';
             }
@@ -447,6 +652,47 @@
             if (!brand) return '';
             const upperBrand = brand.toUpperCase();
             return brandTranslations[upperBrand] || brand;
+        }
+        
+        function extractTireInfo(sizeText) {
+            if (!sizeText) return null;
+            
+            const info = {
+                loadIndex: null,
+                speedRating: null,
+                carBrandCode: null,
+                isLT: false,
+                isRunFlat: false
+            };
+            
+            const cleanText = sizeText.trim().toUpperCase();
+            
+            // التحق�� من ربع حجري
+            info.isLT = cleanText.startsWith('LT');
+            
+            // التحقق من رن فلات
+            info.isRunFlat = isRunFlat(cleanText);
+            
+            // استخراج رقم الحمولة وحرف السرعة (مثل 94V أو 103H)
+            const loadSpeedMatch = cleanText.match(/(\d{2,3})([HSTVWY])\b/);
+            if (loadSpeedMatch) {
+                info.loadIndex = loadSpeedMatch[1];
+                info.speedRating = loadSpeedMatch[2];
+            }
+            
+            // استخراج رموز الشركات
+            // البحث عن الرموز الطويلة أولاً ثم القصيرة
+            const codes = Object.keys(carBrandCodes).sort((a, b) => b.length - a.length);
+            for (const code of codes) {
+                if (code === '*') continue; // تجاهل * لأنه رمز عام
+                const regex = new RegExp('\\b' + code + '\\b', 'i');
+                if (regex.test(cleanText)) {
+                    info.carBrandCode = code;
+                    break;
+                }
+            }
+            
+            return info;
         }
 
         function translateCountry(origin) {
@@ -487,7 +733,7 @@
                     button.style.background = 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)';
                 }, 1500);
             } catch (err) {
-                showToast('فشل النسخ، حاول مره أخرى');
+                showToast('فشل النسخ، حاول مرة أخرى');
             }
             
             document.body.removeChild(textArea);
@@ -553,17 +799,18 @@
                             const price = row.c[5]?.v || row.c[5]?.f || row.c[4]?.v || row.c[4]?.f || '';
                             const origin = row.c[6]?.v || row.c[6]?.f || '';
                             
-                            // تجاهل صف العناو��ن فقط
+                            // تجاهل صف العناوين فقط
                             if (brand && brand.toUpperCase() === 'BRAND') continue;
                             
                             const normalizedSize = extractTireSize(tireSize);
                             
-                            // إ��افة الصف إذا كان المقاس والسعر موجودين (حتى لو البراند فارغ)
+                            // إضافة الصف إذا كان المقاس والسعر موجودين (حتى لو البراند فارغ)
                             if (normalizedSize && price && price.toString().trim()) {
                                 allSizes.add(normalizedSize);
                                 sheetData.push({
                                     brand: brand ? brand.toString().trim() : '',
                                     tireSize: normalizedSize,
+                                    originalSize: tireSize,
                                     pattern: extractPattern(tireSize, pattern),
                                     year: year ? year.toString().trim() : '',
                                     price: price.toString().trim(),
@@ -594,7 +841,7 @@
                 const loadPromises = SHEET_TABS.map(tabName => loadSheetTab(SHEET_ID, tabName));
                 const results = await Promise.all(loadPromises);
                 
-                // دمج جميع النتائج
+                // دمج جميع النت��ئج
                 results.forEach(tabData => {
                     if (tabData.length > 0) {
                         allData = allData.concat(tabData);
@@ -628,7 +875,7 @@
                 status.textContent = 'فشل الاتصال';
                 status.style.color = '#EF4444';
                 
-                // إظهار مربع البحث حتى لو فشل التحميل
+                // إظهار مربع البحث ��تى لو فشل التحميل
                 document.getElementById('initialLoading').classList.add('hidden');
                 document.getElementById('searchBox').classList.remove('hidden');
                 
@@ -640,12 +887,25 @@
             const normalizedSearch = extractTireSize(searchSize);
             if (!normalizedSearch) return [];
             
-            // البحث عن المقاس مع أو بدون LT
-            const searchWithoutLT = normalizedSearch.replace(/^LT/i, '');
+            // التحقق من وجود LT في البحث
+            const searchHasLT = normalizedSearch.toUpperCase().startsWith('LT');
             
             const results = allData.filter(item => {
-                const itemSizeWithoutLT = item.tireSize.replace(/^LT/i, '');
-                return item.tireSize === normalizedSearch || itemSizeWithoutLT === searchWithoutLT;
+                // التحقق من وجود LT في النتيجة
+                const itemHasLT = item.tireSize.toUpperCase().startsWith('LT');
+                
+                // إذا كان البحث يحتوي على LT، عرض فقط النتائج التي تحتوي على LT
+                // إذا كان البحث بدون LT، عرض فقط النتائج بدون LT
+                if (searchHasLT !== itemHasLT) {
+                    return false;
+                }
+                
+                // مقارنة المقاسات بشكل دقيق (بما في ذلك R و ZR)
+                if (item.tireSize !== normalizedSearch) {
+                    return false;
+                }
+                
+                return true;
             });
             
             // إزالة النتائج المكررة بناءً على (الماركة + المقاس + النقشة + السنة + السعر)
@@ -679,12 +939,12 @@
             
             brandCheckboxes.innerHTML = '';
             
-            // عرض الفلتر فقط إذا كان هناك ماركات
+            // عرض الف����ر فقط إذا كان هناك ماركات
             if (sortedBrands.length > 0) {
                 // إضافة خيار "الكل" في الأعلى
                 const allLabel = document.createElement('label');
                 allLabel.className = 'flex items-center gap-2 cursor-pointer p-2 rounded hover:bg-gray-800 transition-colors';
-                allLabel.style.color = '#FFD700';
+                allLabel.style.color = '#ffffff';
                 allLabel.style.fontWeight = 'bold';
                 
                 const allCheckbox = document.createElement('input');
@@ -712,7 +972,7 @@
                 sortedBrands.forEach(brand => {
                     const label = document.createElement('label');
                     label.className = 'flex items-center gap-2 cursor-pointer p-2 rounded hover:bg-gray-800 transition-colors';
-                    label.style.color = '#FFD700';
+                    label.style.color = '#e5e5e5';
                     
                     const checkbox = document.createElement('input');
                     checkbox.type = 'checkbox';
@@ -742,12 +1002,12 @@
         function filterByBrand(results) {
             const checkedBrands = Array.from(document.querySelectorAll('.brand-checkbox:not(#selectAll):checked')).map(cb => cb.value);
             
-            // إذا لم يك�� هناك فلتر براند، عرض كل النتائج
+            // إذا لم يكن هناك فلتر براند، ��رض كل النتائج
             if (checkedBrands.length === 0) {
                 return results.filter(result => !result.brand || !result.brand.trim());
             }
             
-            // عرض النتائج المطابقة للبراندات المختارة + النتائج بدون براند
+            // عرض النتائج المطا��قة للبراندات المختارة + النتائج بدون براند
             return results.filter(result => {
                 return !result.brand || !result.brand.trim() || checkedBrands.includes(result.brand);
             });
@@ -762,7 +1022,7 @@
             const config = window.elementSdk ? window.elementSdk.config : defaultConfig;
             const copyButtonText = config.copy_button_text || defaultConfig.copy_button_text;
             
-            // ترتيب النتائج من الأرخص ��لأعلى
+            // ترتيب النتائج من الأرخص للأعلى
             const sortedResults = [...results].sort((a, b) => {
                 const priceA = parseFloat(a.price) || 0;
                 const priceB = parseFloat(b.price) || 0;
@@ -771,6 +1031,9 @@
             
             const tbody = document.getElementById('resultsTableBody');
             tbody.innerHTML = '';
+            
+            // تفريغ المصفوفة العامة
+            window.tireInfoData = [];
             
             sortedResults.forEach((result, index) => {
                 const row = document.createElement('tr');
@@ -792,22 +1055,52 @@
                 
                 // تحديد إذا كان ربع حجري أو رن فلات
                 const isLT = result.tireSize.toUpperCase().startsWith('LT');
-                const isRF = isRunFlat(result.tireSize) || isRunFlat(result.pattern);
+                const isRF = isRunFlat(result.originalSize) || isRunFlat(result.pattern);
                 const displaySize = isLT ? `${result.tireSize} (ربع حجري)` : result.tireSize;
                 
-                // جميع ال��لايا تعرض اسم الشركة
+                // استخراج معلومات التاير
+                const tireInfo = extractTireInfo(result.originalSize || result.tireSize);
+                
+                // حفظ المعلومات في المصفوفة العامة
+                window.tireInfoData[index] = {
+                    info: tireInfo,
+                    sizeText: result.originalSize || result.tireSize,
+                    displaySize: displaySize,
+                    pattern: result.pattern
+                };
+                
+                // التحقق من وجود معلومات إضافية غير المقاس
+                const hasAdditionalInfo = 
+                    result.pattern || // يوجد نقشة
+                    (tireInfo && tireInfo.speedRating) || // يوجد رمز سرعة
+                    (tireInfo && tireInfo.loadIndex) || // يوجد رقم حمولة
+                    (tireInfo && tireInfo.carBrandCode) || // يوجد رمز شركة
+                    (tireInfo && tireInfo.isLT) || // ربع حجري
+                    (tireInfo && tireInfo.isRunFlat); // رن فلات
+                
+                // زر المعلومات يظهر فقط إذا كان هناك معلومات إضافية
+                const infoButton = hasAdditionalInfo 
+                    ? `<button class="info-btn ml-2" onclick="window.showInfoModal(${index})" title="معلومات التاير">i</button>`
+                    : '';
+                
+                // جميع الخلايا تعرض اسم الشركة
                 row.innerHTML = `
                     <td class="px-4 py-3 border-b" style="border-color: #333;">
                         <div style="font-size: 0.7rem; color: #888; margin-bottom: 6px; font-weight: 600;">${companyName}</div>
                         ${result.brand && result.brand.trim() 
                             ? `<div class="font-bold">${brandArabic}</div>` 
-                            : `<input type="text" id="${brandInputId}" placeholder="أدخل اسم الماركة" class="w-full px-2 py-1 rounded border focus:outline-none text-sm" style="background-color: #000000; color: #FFD700; border-color: #FFD700;">`
+                            : `<input type="text" id="${brandInputId}" placeholder="أدخل اسم الماركة" class="w-full px-2 py-1 rounded border focus:outline-none text-sm" style="background-color: #000000; color: #e5e5e5; border-color: #FFD700;">`
                         }
                     </td>
-                    <td class="px-4 py-3 font-bold border-b" style="color: #FFD700; border-color: #333;">${displaySize}</td>
+                    <td class="px-4 py-3 font-bold border-b" style="color: #ffffff; border-color: #333;">
+                        <div class="flex items-center gap-2">
+                            <span>${displaySize}</span>
+                            ${infoButton}
+                        </div>
+                    </td>
                     <td class="px-4 py-3 border-b" style="border-color: #333;">${result.pattern}</td>
                     <td class="px-4 py-3 border-b" style="border-color: #333;">
-                        <select id="${countrySelectId}" class="w-full px-2 py-1 rounded border focus:outline-none" style="background-color: #000000; color: #FFD700; border-color: #FFD700;">
+                        <select id="${countrySelectId}" class="w-full px-2 py-1 rounded border focus:outline-none" style="background-color: #000000; color: #e5e5e5; border-color: #FFD700;">
                             <option value="">اختر بلد الصنع</option>
                             ${availableCountries.map(country => 
                                 `<option value="${country}" ${country === countryArabic ? 'selected' : ''}>${country}</option>`
@@ -815,14 +1108,14 @@
                         </select>
                     </td>
                     <td class="px-4 py-3 border-b" style="border-color: #333;">
-                        <select id="${yearSelectId}" class="w-full px-2 py-1 rounded border focus:outline-none" style="background-color: #000000; color: #FFD700; border-color: #FFD700;">
+                        <select id="${yearSelectId}" class="w-full px-2 py-1 rounded border focus:outline-none" style="background-color: #000000; color: #e5e5e5; border-color: #FFD700;">
                             <option value="">اختر السنة</option>
                             ${availableYears.map(year => 
                                 `<option value="${year}" ${year === result.year ? 'selected' : ''}>${year}</option>`
                             ).join('')}
                         </select>
                     </td>
-                    <td class="px-4 py-3 font-bold border-b" style="color: #FFD700; border-color: #333;">${result.price}</td>
+                    <td class="px-4 py-3 font-bold border-b" style="color: #ffffff; border-color: #333;">${result.price}</td>
                     <td class="px-4 py-3 text-center border-b" style="border-color: #333;">
                         <button class="copy-btn px-4 py-2 rounded text-black font-bold hover:opacity-90 transition-opacity" style="background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);">
                             ${copyButtonText}
@@ -838,7 +1131,7 @@
                         const brandInput = document.getElementById(brandInputId);
                         finalBrand = brandInput ? brandInput.value.trim() : '';
                         
-                        // التحقق من ��دخال الماركة
+                        // التحقق من إدخال الماركة
                         if (!finalBrand) {
                             showToast('⚠️ الرجاء إدخال اسم الماركة أولاً');
                             if (brandInput) {
@@ -855,7 +1148,7 @@
                     const selectedCountry = document.getElementById(countrySelectId).value;
                     const selectedYear = document.getElementById(yearSelectId).value;
                     
-                    // التحقق من اختيار بلد الصنع والسنة
+                    // ال��حقق من اختيار بلد الصنع والسنة
                     if (!selectedCountry) {
                         showToast('⚠️ الرجاء اختيار بلد الصنع أولاً');
                         document.getElementById(countrySelectId).style.borderColor = '#EF4444';
@@ -874,7 +1167,7 @@
                         return;
                     }
                     
-                    // إضافة معلومات إضافية للماركة (رن فلات أو ربع حجري)
+                    // إضافة معلومات إضافية للماركة (رن فللات أو ربع حجري)
                     let brandInfo = '';
                     if (isRF && isLT) {
                         brandInfo = ' (رن فلات - ربع حجري)';
@@ -884,7 +1177,7 @@
                         brandInfo = ' (ربع حجري)';
                     }
                     
-                    // الصيغة: (اسم الماركة) (معلومات إضافية) (بلد الصنع) سنة الصنع . سعر الواحد د.ك
+                    // الصيغة: (اسم الماركة) (معلومات إضافية) (بلد الصنع) سنة الصنع . سعر ال��احد د.ك
                     const yearText = selectedYear ? `سنة الصنع ${selectedYear}` : '';
                     
                     const copyText = `${finalBrand}${brandInfo} ${selectedCountry} ${yearText}. سعر الواحد ${result.price} د.ك`;
@@ -984,5 +1277,5 @@
             });
         }
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9be630c7807e51c4',t:'MTc2ODQ4ODY3OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c51c2267369d1a4',t:'MTc2OTYxNjYxMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
