@@ -382,7 +382,7 @@
             'PIRELLI': 'بيريللي',
             'DUNLOP': 'دنلوب',
             'YOKOHAMA': 'يوكوهاما',
-            'YOKOHAMA AI TERRA TIRE': 'يوكاهاما حجري(جميع التضاريس)',
+            'YOKOHAMA AI TERRA TIRE': 'يوكوهاما حجري(جميع التضاريس)',
             'AI TERRA TIRE': 'يوكوهاما حجري(جميع التضاريس)',
             'HANKOOK': 'هانكوك',
             'KUMHO': 'كومهو',
@@ -395,11 +395,27 @@
             'MAYRUN': 'مايرن',
             'ZETUM': 'زيتوم',
             'APOLLO': 'أبولو',
-            'KINFOREST': 'كين فورست',
             'ROADSTONE': 'رودستون',
             'SUMITOMO': 'سوميتومو',
             'FIRESTONE': 'فايرستون',
-            'ULTRAFORCE': 'ألترا فورس'
+            'ULTRAFORCE': 'ألترا فورس',
+            'KINFOREST': 'كين فورست',
+            'ARROYO': 'أرويو',
+           'CENTARA': 'سنتارا',
+           'HAMAN1': 'هامان',
+           'TESCHE': 'تيشي',
+           'OTANI': 'أوتاني',
+          'DELINTE': 'دلِنتي',
+          'ZTX': 'زتكس',
+           'ATLASE': 'أطلس',
+           'LANDSPIDER': 'لاند سبايدر',
+           'KETER': 'كيتر',
+           'WIDEWAY': 'وايد واي',
+           'BEARWAY': 'بير واي',
+           'ARROYO/CENTARA': 'أرويو / سنتارا',
+           'KETER/ARROYO': 'كيتر / أرويو',
+           'ARROYO/LANDSPIDER': 'أرويو / لاند سبايدر'
+         
         };
 
         // جدول تحويل الدول من الإنجليزي إلى العربي
@@ -545,7 +561,10 @@
             'Pirelli Retail price list',
             'Firestone Tires',
             'UltraForce Tires',
-            'فرج حولي'
+            'فرج حولي',
+            'ZEETEX Tiers',
+            'MICHELIN , BFGOODRICH offer'
+         
         ];
         
         // جدول تحويل أسماء التبويبات إلى أسماء الشركات بالعربي
@@ -562,7 +581,9 @@
             'Pirelli Retail price list': 'بيريلي بهبهاني',
             'Firestone Tires': 'فايرستون (فارتا)',
             'UltraForce Tires': 'الترا فورس (فارتا)',
+            'ZEETEX Tiers': 'زيتكس',
             'فرج حولي': 'فرج حولي'
+         
         };
         
         let allData = [];
@@ -612,6 +633,8 @@
                    upperText.includes('R-F') ||
                    upperText.includes('RFT') || 
                    upperText.includes('RUNFLAT') || 
+                   upperText.includes('RUNFLAT') || 
+                   upperText.includes('ZP') || 
                    upperText.includes('RUNFLAT');
         }
 
